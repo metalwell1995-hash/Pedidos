@@ -1,1 +1,46 @@
+name: Build APK
 
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Agregar plataforma Android
+        run: |
+          npx cap add android
+          npx cap sync
+
+      - name: Dar permiso a gradlew
+        run: chmod +x android/gradlew
+
+      - name: Generar APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Subir APK como archivo descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mis-Pedidos-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
