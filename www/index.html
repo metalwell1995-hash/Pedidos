@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gaby Y Normis</title>
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:#f5f5f5}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#f5f5f5}
 header{background:#111;color:#fff;padding:16px;text-align:center;font-size:22px;font-weight:900}
 header span{font-size:28px}
 .wrap{padding:14px;max-width:600px;margin:0 auto}
@@ -18,59 +19,121 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .btn-back{background:#eee;color:#333;margin-bottom:12px}
 .pedido{border-top:1px solid #eee;padding:12px 0}
 .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;margin:2px}
-.badge-pagado{background:#d9f7d9;color:#0a6b0a} .badge-entregado{background:#dbeafe;color:#0a4ab5} .badge-no{background:#eee;color:#888}
-.del{background:#ff3b30;margin-top:8px} .img-btn{background:#0a4ab5;margin-top:8px}
+.badge-pagado{background:#d9f7d9;color:#0a6b0a}
+.badge-entregado{background:#dbeafe;color:#0a4ab5}
+.badge-no{background:#eee;color:#888}
+/* BOTONES ARREGLADOS */
+.img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
+.del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
 .total{font-size:18px;font-weight:800;text-align:right}
 .check-row{display:flex;gap:10px;margin-top:10px}
 .check-box{flex:1;display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:12px;font-size:14px;font-weight:700}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
-.check-box.on-pagado{background:#d9f7d9} .check-box.on-entregado{background:#dbeafe}
-.resumen{display:flex;gap:8px;text-align:center} .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px} .resumen b{font-size:20px;display:block}
+.check-box.on-pagado{background:#d9f7d9}
+.check-box.on-entregado{background:#dbeafe}
+.resumen{display:flex;gap:8px;text-align:center}
+.resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
+.resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
-.opt-row{display:flex;gap:8px;margin:4px 0 8px} .opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff}
+.opt-row{display:flex;gap:8px;margin:4px 0 8px}
+.opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff}
 .opt.sel{background:#111;color:#fff}
-.calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0} .calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0} .calc b{font-size:17px}
+.calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0}
+.calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
+.calc b{font-size:17px}
+.small{font-size:13px;color:#666}
+.user-bar{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;border-bottom:1px solid #eee}
+.user-bar button{width:auto;padding:6px 12px;font-size:13px;background:#eee;color:#333;border-radius:20px}
+#login{max-width:400px;margin:60px auto;padding:20px;text-align:center}
+#login .card{padding:22px}
 </style>
 </head>
 <body>
-<header><span>🐾</span><br>GABY Y NORMIS</header>
-<div class="wrap">
 
-<div id="menu">
-  <button class="btn-menu" onclick="ir('pedidos')">📦 Pedidos<small>Agregar y ver pedidos</small></button>
-  <button class="btn-menu" onclick="ir('reporte')" style="background:#0a4ab5">🚚 Reporte de entrega<small>Solo aquí puedes palomear Pagado / Entregado</small></button>
-  <div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div></div>
-</div>
-
-<div id="sec-pedidos" style="display:none">
-  <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div id="login">
+  <div style="font-size:50px">🐾</div>
+  <h2 style="margin:5px 0">GABY Y NORMIS</h2>
+  <p style="color:#666;font-size:14px">Escribe tu clave de equipo para entrar</p>
   <div class="card">
-    <h3 style="margin:0">Nuevo Pedido</h3>
-    <label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
-    <label>Departamento</label>
-    <select id="depto"><option value="">Elige departamento</option><option>Arriba</option><option>Abajo</option><option>Enmedio</option></select>
-    <label>Cantidad</label>
-    <select id="cantidad"><option value="">Elige 1 al 10</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-    <label>Talla</label>
-    <div class="opt-row" id="tallas"></div>
-    <label>Tela</label>
-    <div class="opt-row" id="telas"></div>
-    <label>Color</label><input id="color" placeholder="Ej: Negro, Rosa, Blanco...">
-    <label>Precio Prenda</label><input id="precio" type="number" placeholder="$" oninput="calc()">
-    <label>Abono</label><input id="abono" type="number" placeholder="$" oninput="calc()">
-    <div class="calc"><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Total:</span><b id="txt-total">$0</b></div></div>
-    <button onclick="agregar()">+ Agregar Pedido</button>
+    <label style="text-align:left">Tu clave</label>
+    <input id="clave" type="password" placeholder="Ej: Normis80">
+    <button onclick="entrar()">Entrar</button>
+    <p id="error-login" style="color:#cc0000;font-size:13px;display:none">Clave incorrecta, intenta de nuevo</p>
   </div>
-  <div class="card"><h3 style="margin:0">Pedidos Guardados</h3><div id="lista"></div><div class="total" id="totalG"></div><button onclick="borrarTodo()" style="background:#eee;color:#333;margin-top:10px">Borrar todo</button></div>
+  <p style="color:#999;font-size:12px">Solo equipo autorizado</p>
 </div>
 
+<div id="app" style="display:none">
+<header><span>🐾</span><br>GABY Y NORMIS</header>
+<div class="user-bar"><span id="txt-usuario">Hola</span><button onclick="salir()">Salir</button></div>
+<div class="wrap">
+<div id="menu">
+<button class="btn-menu" onclick="ir('pedidos')">📦 Pedidos<small>Agregar y ver pedidos</small></button>
+<button class="btn-menu" onclick="ir('reporte')" style="background:#0a4ab5">🚚 Reporte de entrega<small>Solo aquí puedes palomear Pagado / Entregado</small></button>
+<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div></div>
+</div>
+<div id="sec-pedidos" style="display:none">
+<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div class="card">
+<h3 style="margin:0">Nuevo Pedido</h3>
+<label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
+<label>Departamento</label>
+<select id="depto"><option value="">Elige departamento</option><option>Arriba</option><option>Abajo</option><option>Enmedio</option></select>
+<label>Cantidad</label>
+<select id="cantidad"><option value="">Elige 1 al 10</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+<label>Talla</label><div class="opt-row" id="tallas"></div>
+<label>Tela</label><div class="opt-row" id="telas"></div>
+<label>Color</label><input id="color" placeholder="Ej: Negro, Rosa, Blanco...">
+<label>Precio Prenda</label><input id="precio" type="number" placeholder="$" oninput="calc()">
+<label>Abono</label><input id="abono" type="number" placeholder="$" oninput="calc()">
+<div class="calc"><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Total:</span><b id="txt-total">$0</b></div></div>
+<button onclick="agregar()">+ Agregar Pedido</button>
+</div>
+<div class="card"><h3 style="margin:0">Pedidos Guardados</h3><div id="lista"></div><div class="total" id="totalG"></div><button onclick="borrarTodo()" style="background:#eee;color:#333;margin-top:10px">Borrar todo</button></div>
+</div>
 <div id="sec-reporte" style="display:none">
-  <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-  <div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p style="color:#666;font-size:13px">Solo aquí puedes seleccionar Pagado / Entregado.</p><div id="lista-reporte"></div></div>
+<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p style="color:#666;font-size:13px">Solo aquí puedes seleccionar Pagado / Entregado.</p><div id="lista-reporte"></div></div>
+</div>
+</div>
 </div>
 
-</div>
 <script>
+let USUARIOS = {"Normis80":"Normis","Gaby70":"Gaby","Norbert":"Norbert"};
+let usuarioActual = localStorage.getItem('usuario_gaby') || '';
+function entrar(){
+  let c = document.getElementById('clave').value.trim();
+  if(USUARIOS[c]){
+    usuarioActual = USUARIOS[c];
+    localStorage.setItem('usuario_gaby', usuarioActual);
+    localStorage.setItem('clave_gaby', c);
+    document.getElementById('error-login').style.display='none';
+    mostrarApp();
+  } else {
+    document.getElementById('error-login').style.display='block';
+  }
+}
+function salir(){
+  localStorage.removeItem('usuario_gaby');
+  localStorage.removeItem('clave_gaby');
+  usuarioActual='';
+  document.getElementById('login').style.display='block';
+  document.getElementById('app').style.display='none';
+  document.getElementById('clave').value='';
+}
+function mostrarApp(){
+  if(!usuarioActual){
+    document.getElementById('login').style.display='block';
+    document.getElementById('app').style.display='none';
+    return;
+  }
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('txt-usuario').innerText = 'Hola, ' + usuarioActual + ' 👋';
+  mostrar();
+}
+document.getElementById('clave').addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
+
 let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
 let tallaSel='', telaSel='';
 function renderOpts(){
@@ -100,7 +163,7 @@ function agregar(){
   let ab=parseFloat(document.getElementById('abono').value||0);
   if(!c||!depto||!cant||!tallaSel||!telaSel||!color||!pr){alert('Falta llenar: Nombre, Departamento, Cantidad, Talla, Tela, Color y Precio');return;}
   let {total,resta}=calc();
-  pedidos.unshift({c,depto,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado:false,entregado:false,fecha:new Date().toLocaleString()});
+  pedidos.unshift({c,depto,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado:false,entregado:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
   document.getElementById('nombre').value='';document.getElementById('depto').value='';document.getElementById('cantidad').value='';document.getElementById('color').value='';document.getElementById('precio').value='';document.getElementById('abono').value='';tallaSel='';telaSel='';renderOpts();calc();
   guardar(); alert('Pedido guardado ✅');
 }
@@ -113,10 +176,11 @@ function descargarImagen(i){
   let ctx=cv.getContext('2d');
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,700,820);
   ctx.fillStyle='#111'; ctx.fillRect(0,0,700,130);
-  ctx.fillStyle='#fff'; ctx.font='900 42px sans-serif'; ctx.textAlign='center'; ctx.fillText('🐾 GABY Y NORMIS',350,65);
-  ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
+  ctx.fillStyle='#fff'; ctx.font='900 42px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('🐾 GABY Y NORMIS',350,65); ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
   ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 28px sans-serif';
-  let y=190; let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Talla:',x.talla],['Tela:',x.tela],['Color:',x.color],['Precio Prenda:','$'+x.pr],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Entregado:',x.entregado?'SI':'NO'],['Fecha:',x.fecha||'']];
+  let y=190;
+  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Talla:',x.talla],['Tela:',x.tela],['Color:',x.color],['Precio Prenda:','$'+x.pr],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Entregado:',x.entregado?'SI':'NO'],['Fecha:',x.fecha||'']];
   lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
   ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,790);
   let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
@@ -126,20 +190,20 @@ function mostrar(){
   pedidos.forEach((x,i)=>{
     totG+=x.total;
     h+=`<div class="pedido"><b>${x.c}</b> <span style="color:#666">- ${x.depto} | ${x.cant} pzs | Talla ${x.talla} | ${x.tela} | ${x.color}</span><br>
-    <span class="small">Precio: $${x.pr} | Abono: $${x.ab} | Resta: $${x.resta} | <b>Total: $${x.total}</b> | ${x.fecha||''}</span><br>
+    <span class="small">Precio: $${x.pr} | Abono: $${x.ab} | Resta: $${x.resta} | <b>Total: $${x.total}</b> | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
     ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':'<span class="badge badge-no">○ No Entregado</span>'}<br>
-    <button class="img-btn" onclick="descargarImagen(${i})">⬇ Descargar imagen del pedido</button>
-    <button class="del" onclick="eliminar(${i})">Eliminar</button></div>`;
+    <button class="img-btn" onclick="descargarImagen(${i})">⬇ Descargar imagen</button>
+    <button class="del" onclick="eliminar(${i})">🗑 Eliminar</button></div>`;
   });
   if(!pedidos.length) h='<p style="color:#888">Aún no hay pedidos</p>';
   document.getElementById('lista').innerHTML=h;
   document.getElementById('totalG').innerText='Total general: $'+totG;
   let hr='';
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto} - ${x.cant} pzs - Talla ${x.talla}</div>
+    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto} - ${x.cant} pzs - Talla ${x.talla} - Por: ${x.por||'--'}</div>
     <div class="check-row">
-      <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
-      <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
+    <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
+    <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
     </div></div>`;
   });
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
@@ -148,7 +212,7 @@ function mostrar(){
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
   document.getElementById('r-entregado').innerText=pedidos.filter(x=>x.entregado).length;
 }
-mostrar();
+mostrarApp();
 </script>
 </body>
 </html>
