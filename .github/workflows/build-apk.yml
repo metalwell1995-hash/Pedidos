@@ -33,6 +33,8 @@ jobs:
 
       - name: Poner icono de huella
         run: |
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          rm -f android/app/src/main/res/mipmap-*/ic_launcher*.xml
           mkdir -p android/app/src/main/res/mipmap-xxxhdpi
           mkdir -p android/app/src/main/res/mipmap-xxhdpi
           mkdir -p android/app/src/main/res/mipmap-xhdpi
