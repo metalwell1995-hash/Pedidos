@@ -1,5 +1,5 @@
 module.exports = {
-  appId: 'com.metalwell.pedidos',
-  appName: 'Mis Pedidos',
+  appId: 'com.gabynormis.pedidos',
+  appName: 'Gaby Y Normis',
   webDir: 'www'
 };
