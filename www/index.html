@@ -3,130 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mis Pedidos</title>
+<title>Gaby Y Normis</title>
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:#f2f2f2}
-header{background:#111;color:#fff;padding:16px;text-align:center;font-size:20px;font-weight:800}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:#f5f5f5}
+header{background:#111;color:#fff;padding:16px;text-align:center;font-size:22px;font-weight:900}
+header span{font-size:28px}
 .wrap{padding:14px;max-width:600px;margin:0 auto}
 .card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
+label{font-size:13px;font-weight:700;color:#333;margin-top:8px;display:block}
+input,select{width:100%;padding:12px;margin:4px 0 8px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff}
 button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-.btn-menu{padding:28px;font-size:22px;margin-bottom:14px}
+.btn-menu{padding:24px;font-size:22px;margin-bottom:14px}
 .btn-menu small{display:block;font-size:14px;font-weight:400;color:#ddd;margin-top:4px}
 .btn-back{background:#eee;color:#333;margin-bottom:12px}
 .pedido{border-top:1px solid #eee;padding:12px 0}
-.pedido b{font-size:17px} .small{color:#666;font-size:13px}
-.del{background:#ff3b30;margin-top:8px}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;margin:2px}
+.badge-pagado{background:#d9f7d9;color:#0a6b0a} .badge-entregado{background:#dbeafe;color:#0a4ab5} .badge-no{background:#eee;color:#888}
+.del{background:#ff3b30;margin-top:8px} .img-btn{background:#0a4ab5;margin-top:8px}
 .total{font-size:18px;font-weight:800;text-align:right}
 .check-row{display:flex;gap:10px;margin-top:10px}
-.check-box{flex:1;display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:10px;font-size:14px;font-weight:700}
+.check-box{flex:1;display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:12px;font-size:14px;font-weight:700}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
-.check-box.on-pagado{background:#d9f7d9}
-.check-box.on-entregado{background:#dbeafe}
-.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;margin-left:4px}
-.badge-pagado{background:#d9f7d9;color:#0a6b0a}
-.badge-entregado{background:#dbeafe;color:#0a4ab5}
-.resumen{display:flex;gap:8px;text-align:center}
-.resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
-.resumen b{font-size:20px;display:block}
+.check-box.on-pagado{background:#d9f7d9} .check-box.on-entregado{background:#dbeafe}
+.resumen{display:flex;gap:8px;text-align:center} .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px} .resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
+.opt-row{display:flex;gap:8px;margin:4px 0 8px} .opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff}
+.opt.sel{background:#111;color:#fff}
+.calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0} .calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0} .calc b{font-size:17px}
 </style>
 </head>
 <body>
-<header>📦 MIS PEDIDOS</header>
+<header><span>🐾</span><br>GABY Y NORMIS</header>
 <div class="wrap">
 
-<!-- MENU PRINCIPAL -->
 <div id="menu">
-  <button class="btn-menu" onclick="ir('pedidos')">📦 Pedidos<small>Agregar y ver pedidos guardados</small></button>
-  <button class="btn-menu" onclick="ir('reporte')" style="background:#0a4ab5">🚚 Reporte de entrega<small>Ver clientes - Pagado / Entregado</small></button>
-  <div class="resumen">
-    <div><b id="r-total">0</b>Total pedidos</div>
-    <div><b id="r-pagado">0</b>Pagados</div>
-    <div><b id="r-entregado">0</b>Entregados</div>
-  </div>
+  <button class="btn-menu" onclick="ir('pedidos')">📦 Pedidos<small>Agregar y ver pedidos</small></button>
+  <button class="btn-menu" onclick="ir('reporte')" style="background:#0a4ab5">🚚 Reporte de entrega<small>Solo aquí puedes palomear Pagado / Entregado</small></button>
+  <div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div></div>
 </div>
 
-<!-- SECCION PEDIDOS -->
 <div id="sec-pedidos" style="display:none">
   <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
   <div class="card">
     <h3 style="margin:0">Nuevo Pedido</h3>
-    <input id="cliente" placeholder="Nombre del cliente">
-    <input id="producto" placeholder="Producto">
-    <input id="precio" type="number" placeholder="Precio $">
-    <input id="cantidad" type="number" value="1" placeholder="Cantidad">
+    <label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
+    <label>Departamento</label>
+    <select id="depto"><option value="">Elige departamento</option><option>Arriba</option><option>Abajo</option><option>Enmedio</option></select>
+    <label>Cantidad</label>
+    <select id="cantidad"><option value="">Elige 1 al 10</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+    <label>Talla</label>
+    <div class="opt-row" id="tallas"></div>
+    <label>Tela</label>
+    <div class="opt-row" id="telas"></div>
+    <label>Color</label><input id="color" placeholder="Ej: Negro, Rosa, Blanco...">
+    <label>Precio Prenda</label><input id="precio" type="number" placeholder="$" oninput="calc()">
+    <label>Abono</label><input id="abono" type="number" placeholder="$" oninput="calc()">
+    <div class="calc"><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Total:</span><b id="txt-total">$0</b></div></div>
     <button onclick="agregar()">+ Agregar Pedido</button>
   </div>
-  <div class="card">
-    <h3 style="margin:0">Pedidos Guardados</h3>
-    <div id="lista"></div>
-    <div class="total" id="total"></div>
-    <button onclick="borrarTodo()" style="background:#eee;color:#333;margin-top:10px">Borrar todo</button>
-  </div>
+  <div class="card"><h3 style="margin:0">Pedidos Guardados</h3><div id="lista"></div><div class="total" id="totalG"></div><button onclick="borrarTodo()" style="background:#eee;color:#333;margin-top:10px">Borrar todo</button></div>
 </div>
 
-<!-- SECCION REPORTE -->
 <div id="sec-reporte" style="display:none">
   <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-  <div class="card">
-    <h3 style="margin:0">🚚 Reporte de entrega</h3>
-    <p style="color:#666;font-size:13px;margin:6px 0">Palomea cada cliente cuando pague o cuando le entregues.</p>
-    <div id="lista-reporte"></div>
-  </div>
+  <div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p style="color:#666;font-size:13px">Solo aquí puedes seleccionar Pagado / Entregado.</p><div id="lista-reporte"></div></div>
 </div>
 
 </div>
 <script>
-let pedidos = JSON.parse(localStorage.getItem('pedidos')||'[]');
-pedidos = pedidos.map(p=>({pagado:false, entregado:false, ...p}));
-function guardar(){localStorage.setItem('pedidos',JSON.stringify(pedidos));mostrar();}
-function ir(vista){
-  document.getElementById('menu').style.display = vista==='menu'?'block':'none';
-  document.getElementById('sec-pedidos').style.display = vista==='pedidos'?'block':'none';
-  document.getElementById('sec-reporte').style.display = vista==='reporte'?'block':'none';
-  mostrar(); window.scrollTo(0,0);
+let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
+let tallaSel='', telaSel='';
+function renderOpts(){
+  let tallas=['XL','L','M','S','XS'];
+  document.getElementById('tallas').innerHTML=tallas.map(t=>`<div class="opt ${tallaSel===t?'sel':''}" onclick="tallaSel='${t}';renderOpts()">${t}</div>`).join('');
+  let telas=['Suave','Delgada'];
+  document.getElementById('telas').innerHTML=telas.map(t=>`<div class="opt ${telaSel===t?'sel':''}" onclick="telaSel='${t}';renderOpts()">${t}</div>`).join('');
 }
-function agregar(){
-  let c=document.getElementById('cliente').value.trim();
-  let p=document.getElementById('producto').value.trim();
+renderOpts();
+function calc(){
   let pr=parseFloat(document.getElementById('precio').value||0);
-  let cant=parseInt(document.getElementById('cantidad').value||1);
-  if(!c||!p){alert('Falta cliente o producto');return;}
-  pedidos.unshift({c,p,pr,cant,pagado:false,entregado:false,fecha:new Date().toLocaleString()});
-  document.getElementById('cliente').value='';document.getElementById('producto').value='';document.getElementById('precio').value='';
-  guardar();
+  let cant=parseInt(document.getElementById('cantidad').value||0);
+  let ab=parseFloat(document.getElementById('abono').value||0);
+  let total=pr*cant; let resta=total-ab; if(resta<0) resta=0;
+  document.getElementById('txt-total').innerText='$'+total;
+  document.getElementById('txt-resta').innerText='$'+resta;
+  return {total,resta};
+}
+function guardar(){localStorage.setItem('pedidos_gaby',JSON.stringify(pedidos));mostrar();}
+function ir(v){document.getElementById('menu').style.display=v==='menu'?'block':'none';document.getElementById('sec-pedidos').style.display=v==='pedidos'?'block':'none';document.getElementById('sec-reporte').style.display=v==='reporte'?'block':'none';mostrar();window.scrollTo(0,0);}
+function agregar(){
+  let c=document.getElementById('nombre').value.trim();
+  let depto=document.getElementById('depto').value;
+  let cant=parseInt(document.getElementById('cantidad').value||0);
+  let color=document.getElementById('color').value.trim();
+  let pr=parseFloat(document.getElementById('precio').value||0);
+  let ab=parseFloat(document.getElementById('abono').value||0);
+  if(!c||!depto||!cant||!tallaSel||!telaSel||!color||!pr){alert('Falta llenar: Nombre, Departamento, Cantidad, Talla, Tela, Color y Precio');return;}
+  let {total,resta}=calc();
+  pedidos.unshift({c,depto,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado:false,entregado:false,fecha:new Date().toLocaleString()});
+  document.getElementById('nombre').value='';document.getElementById('depto').value='';document.getElementById('cantidad').value='';document.getElementById('color').value='';document.getElementById('precio').value='';document.getElementById('abono').value='';tallaSel='';telaSel='';renderOpts();calc();
+  guardar(); alert('Pedido guardado ✅');
 }
 function eliminar(i){if(confirm('¿Eliminar este pedido?')){pedidos.splice(i,1);guardar();}}
 function borrarTodo(){if(confirm('¿Borrar todo?')){pedidos=[];guardar();}}
 function toggle(i,campo){pedidos[i][campo]=!pedidos[i][campo];guardar();}
+function descargarImagen(i){
+  let x=pedidos[i];
+  let cv=document.createElement('canvas'); cv.width=700; cv.height=820;
+  let ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,700,820);
+  ctx.fillStyle='#111'; ctx.fillRect(0,0,700,130);
+  ctx.fillStyle='#fff'; ctx.font='900 42px sans-serif'; ctx.textAlign='center'; ctx.fillText('🐾 GABY Y NORMIS',350,65);
+  ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
+  ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 28px sans-serif';
+  let y=190; let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Talla:',x.talla],['Tela:',x.tela],['Color:',x.color],['Precio Prenda:','$'+x.pr],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Entregado:',x.entregado?'SI':'NO'],['Fecha:',x.fecha||'']];
+  lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
+  ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,790);
+  let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
+}
 function mostrar(){
-  let h='';let tot=0;
+  let h='';let totG=0;
   pedidos.forEach((x,i)=>{
-    let sub=x.pr*x.cant;tot+=sub;
-    h+=`<div class="pedido"><b>${x.c} - ${x.p}</b><div class="small">${x.cant} x $${x.pr} = $${sub}<br>${x.fecha||''}</div>
-    <div class="check-row">
-      <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
-      <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
-    </div>
+    totG+=x.total;
+    h+=`<div class="pedido"><b>${x.c}</b> <span style="color:#666">- ${x.depto} | ${x.cant} pzs | Talla ${x.talla} | ${x.tela} | ${x.color}</span><br>
+    <span class="small">Precio: $${x.pr} | Abono: $${x.ab} | Resta: $${x.resta} | <b>Total: $${x.total}</b> | ${x.fecha||''}</span><br>
+    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':'<span class="badge badge-no">○ No Entregado</span>'}<br>
+    <button class="img-btn" onclick="descargarImagen(${i})">⬇ Descargar imagen del pedido</button>
     <button class="del" onclick="eliminar(${i})">Eliminar</button></div>`;
   });
   if(!pedidos.length) h='<p style="color:#888">Aún no hay pedidos</p>';
   document.getElementById('lista').innerHTML=h;
-  document.getElementById('total').innerText='Total: $'+tot;
-
-  // REPORTE - SOLO NOMBRE DEL CLIENTE
+  document.getElementById('totalG').innerText='Total general: $'+totG;
   let hr='';
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div>
+    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto} - ${x.cant} pzs - Talla ${x.talla}</div>
     <div class="check-row">
       <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
       <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
     </div></div>`;
   });
-  if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes guardados.<br>Agrega pedidos primero en la sección Pedidos.</p>';
+  if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
-
   document.getElementById('r-total').innerText=pedidos.length;
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
   document.getElementById('r-entregado').innerText=pedidos.filter(x=>x.entregado).length;
