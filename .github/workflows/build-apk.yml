@@ -25,11 +25,26 @@ jobs:
 
       - name: Instalar dependencias
         run: npm install
-
+      
       - name: Agregar plataforma Android
         run: |
           npx cap add android
           npx cap sync
+
+      - name: Poner icono de huella
+        run: |
+          mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxhdpi
+          mkdir -p android/app/src/main/res/mipmap-xhdpi
+          mkdir -p android/app/src/main/res/mipmap-hdpi
+          mkdir -p android/app/src/main/res/mipmap-mdpi
+          cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          cp icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp icon.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp icon.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp icon.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp icon.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+          cp icon.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
 
       - name: Dar permiso a gradlew
         run: chmod +x android/gradlew
