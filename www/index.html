@@ -29,6 +29,7 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .resumen{display:flex;gap:8px;text-align:center}
 .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
 .resumen b{font-size:20px;display:block}
+.nombre-cliente{font-size:19px;font-weight:800}
 </style>
 </head>
 <body>
@@ -78,7 +79,6 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 </div>
 <script>
 let pedidos = JSON.parse(localStorage.getItem('pedidos')||'[]');
-// Migrar pedidos viejos para que tengan pagado/entregado
 pedidos = pedidos.map(p=>({pagado:false, entregado:false, ...p}));
 function guardar(){localStorage.setItem('pedidos',JSON.stringify(pedidos));mostrar();}
 function ir(vista){
@@ -115,11 +115,10 @@ function mostrar(){
   document.getElementById('lista').innerHTML=h;
   document.getElementById('total').innerText='Total: $'+tot;
 
-  // REPORTE
+  // REPORTE - SOLO NOMBRE DEL CLIENTE
   let hr='';
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="pedido"><b>${x.c}</b> <span class="small">- ${x.p} ($${x.pr*x.cant})</span><br>
-    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':''} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':''}
+    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div>
     <div class="check-row">
       <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
       <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
@@ -128,7 +127,6 @@ function mostrar(){
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes guardados.<br>Agrega pedidos primero en la sección Pedidos.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
 
-  // RESUMEN MENU
   document.getElementById('r-total').innerText=pedidos.length;
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
   document.getElementById('r-entregado').innerText=pedidos.filter(x=>x.entregado).length;
