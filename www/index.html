@@ -24,7 +24,6 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .badge-no{background:#eee;color:#888}
 .img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
 .del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
-.btn-copiar{background:#ff8c00!important;padding:10px!important;font-size:14px!important;margin-top:8px}
 .total{font-size:18px;font-weight:800;text-align:right}
 .check-box{display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:10px;font-size:14px;font-weight:700;justify-content:center}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
@@ -59,7 +58,7 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .detalle{display:none;background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
 .detalle.show{display:block}
 .reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.reporte-item .info{flex:1;cursor:pointer}
+.reporte-item .info{flex:1}
 .reporte-item .info b{font-size:17px;display:block}
 .chaleco-grupo{margin:8px 0;padding:10px;background:#fff;border:1px solid #eee;border-radius:12px}
 .chaleco-grupo h4{margin:0 0 6px;font-size:15px}
@@ -67,15 +66,20 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .carpeta b{font-size:16px}
 .resumen-simple{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .resumen-simple h3{margin:0 0 10px;font-size:16px;text-align:center}
-.resumen-fila{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:15px}
+.resumen-fila{display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:15px}
 .resumen-fila:last-child{border-bottom:0}
 .resumen-fila b{font-size:17px}
-.completado-item{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.resumen-fila.click{cursor:pointer;background:#f9f9f9;border-radius:8px}
+.resumen-fila.click:active{background:#eee}
+.completado-item{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .completado-item b{font-size:16px}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:99;padding:16px}
 .modal-bg.show{display:flex}
 .modal{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:400px}
 .modal h3{margin:0 0 10px}
+.lista-simple-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.lista-simple-item b{font-size:16px}
+.lista-simple-item span{font-size:13px;color:#666}
 </style>
 </head>
 <body>
@@ -102,8 +106,8 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <div class="resumen-simple">
 <h3>📊 Resumen</h3>
 <div class="resumen-fila"><span>📦 Total pedidos</span><b id="r-total">0</b></div>
-<div class="resumen-fila"><span>💰 Total general</span><b id="r-total-dinero">$0</b></div>
-<div class="resumen-fila"><span>🧾 Falta por cobrar</span><b id="r-resta" style="color:#cc0000">$0</b></div>
+<div class="resumen-fila click" onclick="ir('total')"><span>💰 Total general <small style="color:#888">▶ Toca para ver</small></span><b id="r-total-dinero">$0</b></div>
+<div class="resumen-fila click" onclick="ir('falta')"><span>🧾 Falta por cobrar <small style="color:#888">▶ Toca para ver</small></span><b id="r-resta" style="color:#cc0000">$0</b></div>
 <div class="resumen-fila"><span>✅ Pagados</span><b id="r-pagado" style="color:#0a6b0a">0</b></div>
 <div class="resumen-fila"><span>🦺 Listos</span><b id="r-listo" style="color:#856404">0</b></div>
 </div>
@@ -118,6 +122,7 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <div class="card">
 <h3 style="margin:0">Nuevo Pedido</h3>
 <label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
+<label>Teléfono</label><input id="telefono" type="tel" placeholder="Ej: 55 1234 5678">
 <label>Departamento</label>
 <div class="opt-row" id="deptos"></div>
 <label>Cantidad - Chalecos</label>
@@ -132,12 +137,22 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <div id="sec-guardados" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
 <div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div></div>
-<div class="card" style="text-align:center"><div class="carpeta" style="margin:0;background:#eef6ff" onclick="toggleCarpeta()"><b>📁 Pedidos Completados (<span id="num-completados">0</span>)</b><br><span style="font-size:13px;color:#555" id="txt-carpeta">▶ Toca para ver</span></div><div id="lista-archivados" style="display:none;text-align:left;margin-top:10px"></div></div>
+<div class="card" style="text-align:center"><div class="carpeta" style="margin:0;background:#eef6ff" onclick="toggleCarpeta()"><b>📁 Pedidos Completados (<span id="num-completados">0</span>)</b><br><span style="font-size:13px;color:#555" id="txt-carpeta">▶ Toca para ver - Toca un nombre para copiar</span></div><div id="lista-archivados" style="display:none;text-align:left;margin-top:10px"></div></div>
 </div>
 
 <div id="sec-reporte" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><p style="color:#666;font-size:13px">Toca el nombre para copiar el pedido.</p><div id="lista-reporte"></div></div>
+<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><div id="lista-reporte"></div></div>
+</div>
+
+<div id="sec-total" style="display:none">
+<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div class="card"><h3 style="margin:0">💰 Total General</h3><p style="color:#666;font-size:13px">Todos los pedidos - Nombre, costo total y si falta pagar.</p><div id="lista-total"></div><div class="total" id="total-total"></div></div>
+</div>
+
+<div id="sec-falta" style="display:none">
+<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div class="card"><h3 style="margin:0">🧾 Falta por Cobrar</h3><p style="color:#666;font-size:13px">Ordenado por fecha - Solo los que deben.</p><div id="lista-falta"></div><div class="total" id="total-falta"></div></div>
 </div>
 
 </div>
@@ -202,7 +217,6 @@ pedidos = pedidos.map(p=>{
     for(let i=0;i<cant;i++){ chalecos.push({talla: tallasArr[i]||'', telas: p.tela?[p.tela]:[], colores: p.color?[p.color]:[]}); }
     p.chalecos = chalecos;
   } else {
-    // Convertir tallas viejas de array a single
     p.chalecos = p.chalecos.map(ch=>{
       if(Array.isArray(ch.tallas)){ return {talla: ch.tallas[0]||'', telas: ch.telas||[], colores: ch.colores||[]}; }
       if(ch.talla!==undefined){ return {talla: ch.talla, telas: ch.telas||[], colores: ch.colores||[]}; }
@@ -211,6 +225,7 @@ pedidos = pedidos.map(p=>{
   }
   p.pagado = (p.resta===0 && p.total>0);
   if(!p.fechaNum) p.fechaNum = new Date(p.fecha).getTime() || Date.now();
+  if(!p.telefono) p.telefono = '';
   return p;
 });
 
@@ -286,10 +301,13 @@ function ir(v){
   document.getElementById('sec-pedidos').style.display=v==='pedidos'?'block':'none';
   document.getElementById('sec-guardados').style.display=v==='guardados'?'block':'none';
   document.getElementById('sec-reporte').style.display=v==='reporte'?'block':'none';
+  document.getElementById('sec-total').style.display=v==='total'?'block':'none';
+  document.getElementById('sec-falta').style.display=v==='falta'?'block':'none';
   mostrar();window.scrollTo(0,0);
 }
 function agregar(){
   let c=document.getElementById('nombre').value.trim();
+  let tel=document.getElementById('telefono').value.trim();
   let ab=parseFloat(document.getElementById('abono').value||0);
   if(!c||!deptoSel||!cantSel){alert('Falta: Nombre, Departamento y Cantidad');return;}
   for(let i=0;i<chalecosSel.length;i++){
@@ -301,8 +319,8 @@ function agregar(){
   let telasTxt = chalecosSel.map(ch=>ch.telas.join('+')).join(', ');
   let coloresTxt = chalecosSel.map(ch=>ch.colores.join('+')).join(', ');
   let ahora = new Date();
-  pedidos.unshift({c,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:ahora.toLocaleString(),fechaNum:ahora.getTime(),por:usuarioActual||'Sin nombre'});
-  document.getElementById('nombre').value='';document.getElementById('abono').value='';cantSel=0;chalecosSel=[];deptoSel='';renderOpts();calc();
+  pedidos.unshift({c,telefono:tel,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:ahora.toLocaleString(),fechaNum:ahora.getTime(),por:usuarioActual||'Sin nombre'});
+  document.getElementById('nombre').value='';document.getElementById('telefono').value='';document.getElementById('abono').value='';cantSel=0;chalecosSel=[];deptoSel='';renderOpts();calc();
   guardar(); alert('Pedido guardado ✅'); ir('guardados');
 }
 function eliminar(i){
@@ -364,7 +382,7 @@ function descargarImagen(i){
   ctx.fillText('🐾 GABY Y NORMIS',350,65); ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
   ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 26px sans-serif';
   let y=190;
-  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant+' Chalecos'],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
+  let lines=[['Cliente:',x.c],['Telefono:',x.telefono||'-'],['Departamento:',x.depto],['Cantidad:',x.cant+' Chalecos'],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
   lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
   if(x.chalecos){
     x.chalecos.forEach((ch,idx)=>{
@@ -393,9 +411,9 @@ function htmlPedidoDetalle(x,i){
   }
   let isOpen = abierto===i;
   return `<div>
-  <div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} Chaleco(s) • ${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div>
+  <div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} Chaleco(s) • ${x.telefono? '📱 '+x.telefono+' • ':''}${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div>
   <div class="detalle ${isOpen?'show':''}">
-    <span class="small">${chalecosTxt}<br>${x.fecha||''} | Por: ${x.por||'--'}</span><br>
+    <span class="small">${chalecosTxt}<br>Tel: ${x.telefono||'-'} | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
     <span class="small">Total: $${x.total} | Abono: $${x.ab} | Resta: $${x.resta}</span><br>
     <div class="progress"><div style="width:${pct}%"></div></div><small>${pct}% pagado</small><br>
     ${x.pagado?'<span class="badge badge-pagado">✓ Pagado - 100%</span>':'<span class="badge badge-no">○ Falta $'+x.resta+'</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}<br>
@@ -407,7 +425,6 @@ function htmlPedidoDetalle(x,i){
 function mostrar(){
   let activos = pedidos.map((p,idx)=>({p,idx})).filter(o=>!(o.p.listo && o.p.pagado));
   let archivados = pedidos.map((p,idx)=>({p,idx})).filter(o=>(o.p.listo && o.p.pagado));
-  // Ordenar archivados por fecha de pedido (mas reciente primero)
   archivados.sort((a,b)=>(b.p.fechaNum||0)-(a.p.fechaNum||0));
   let totG=0; let faltaTotal=0;
   pedidos.forEach(x=>{ totG+=x.total; faltaTotal+=x.resta; });
@@ -416,12 +433,11 @@ function mostrar(){
   if(!activos.length) h='<p style="color:#888">No hay pedidos activos. Los completados están abajo en Pedidos Completados.</p>';
   document.getElementById('lista').innerHTML=h;
 
-  // Carpeta completados hasta abajo, solo nombre y departamento
   document.getElementById('num-completados').innerText = archivados.length;
-  document.getElementById('txt-carpeta').innerText = carpetaAbierta ? '▼ Cerrar' : '▶ Toca para ver';
+  document.getElementById('txt-carpeta').innerText = carpetaAbierta ? '▼ Cerrar' : '▶ Toca para ver - Toca un nombre para copiar';
   let ha='';
   archivados.forEach(o=>{
-    ha+=`<div class="completado-item"><div><b>${o.p.c}</b><br><span style="color:#666;font-size:13px">${o.p.depto}</span></div><span style="font-size:12px;color:#888">${o.p.fecha||''}</span></div>`;
+    ha+=`<div class="completado-item" onclick="abrirCopiar(${o.idx})"><div><b>${o.p.c} 📋</b><br><span style="color:#666;font-size:13px">${o.p.depto}</span></div><div style="text-align:right"><span style="font-size:12px;color:#888">${o.p.fecha||''}</span><br><span style="font-size:12px;color:#0a6b0a">Toca para copiar</span></div></div>`;
   });
   if(!archivados.length) ha='<p style="color:#888">Aún no hay completados.</p>';
   document.getElementById('lista-archivados').innerHTML=ha;
@@ -430,8 +446,7 @@ function mostrar(){
   let hr='';
   let puedeReporte = puedeModificarReporte();
   pedidos.forEach((x,i)=>{
-    // En reporte solo activos? Mostramos todos, pero los completados ya estan archivados, igual se ven
-    hr+=`<div class="reporte-item"><div class="info" onclick="abrirCopiar(${i})"><b>${x.c} 📋</b><span style="font-size:12px;color:#888">Toca para copiar pedido</span></div>
+    hr+=`<div class="reporte-item"><div class="info"><b>${x.c}</b><span style="font-size:13px;color:#666">${x.depto}</span></div>
     <span class="badge ${x.pagado?'badge-pagado':'badge-no'}" style="white-space:nowrap">${x.pagado?'✓ Pagado':'○ Falta $'+x.resta}</span>
     ${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 95px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 95px"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ Listo'}</label>`}
     </div>`;
@@ -439,7 +454,26 @@ function mostrar(){
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
 
-  // Resumen simple en menu principal
+  // Lista Total General - Nombre + Costo total + si falta pagar
+  let lt='';
+  let ordenTotal = [...pedidos].map((p,idx)=>({p,idx})).sort((a,b)=>(b.p.fechaNum||0)-(a.p.fechaNum||0));
+  ordenTotal.forEach(o=>{
+    lt+=`<div class="lista-simple-item"><div><b>${o.p.c}</b><br><span>${o.p.fecha||''} • ${o.p.depto}</span></div><div style="text-align:right"><b>$${o.p.total}</b><br><span style="color:${o.p.resta===0?'#0a6b0a':'#cc0000'}">${o.p.resta===0?'✅ Pagado':'Falta $'+o.p.resta}</span></div></div>`;
+  });
+  if(!pedidos.length) lt='<p style="color:#888">No hay pedidos.</p>';
+  document.getElementById('lista-total').innerHTML=lt;
+  document.getElementById('total-total').innerText='Total general: $'+totG;
+
+  // Lista Falta por Cobrar - Orden por fecha, solo nombre y cuanto falta
+  let deudores = pedidos.map((p,idx)=>({p,idx})).filter(o=>o.p.resta>0).sort((a,b)=>(a.p.fechaNum||0)-(b.p.fechaNum||0));
+  let lf='';
+  deudores.forEach(o=>{
+    lf+=`<div class="lista-simple-item"><div><b>${o.p.c}</b><br><span>${o.p.fecha||''}</span></div><div style="text-align:right"><b style="color:#cc0000">Falta $${o.p.resta}</b><br><span>Total $${o.p.total}</span></div></div>`;
+  });
+  if(!deudores.length) lf='<p style="color:#0a6b0a">✅ Nadie debe. Todo pagado.</p>';
+  document.getElementById('lista-falta').innerHTML=lf;
+  document.getElementById('total-falta').innerText='Falta cobrar total: $'+faltaTotal;
+
   document.getElementById('r-total').innerText=pedidos.length;
   document.getElementById('r-total-dinero').innerText='$'+totG;
   document.getElementById('r-resta').innerText='$'+faltaTotal;
