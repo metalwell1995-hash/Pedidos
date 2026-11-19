@@ -24,14 +24,12 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .badge-no{background:#eee;color:#888}
 .img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
 .del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
+.btn-copiar{background:#ff8c00!important;padding:10px!important;font-size:14px!important;margin-top:8px}
 .total{font-size:18px;font-weight:800;text-align:right}
 .check-box{display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:10px;font-size:14px;font-weight:700;justify-content:center}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
 .check-box.disabled{opacity:.6;background:#eee}
 .check-box.on-listo{background:#fff3cd}
-.resumen{display:flex;gap:8px;text-align:center}
-.resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
-.resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
 .opt-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 8px}
 .opt-row.cant{grid-template-columns:repeat(5,1fr)}
@@ -61,12 +59,23 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .detalle{display:none;background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
 .detalle.show{display:block}
 .reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.reporte-item .info{flex:1}
+.reporte-item .info{flex:1;cursor:pointer}
 .reporte-item .info b{font-size:17px;display:block}
 .chaleco-grupo{margin:8px 0;padding:10px;background:#fff;border:1px solid #eee;border-radius:12px}
 .chaleco-grupo h4{margin:0 0 6px;font-size:15px}
-.carpeta{background:#eef6ff;border-radius:12px;padding:12px;margin-top:12px;cursor:pointer}
+.carpeta{background:#eef6ff;border-radius:12px;padding:14px;margin-top:12px;cursor:pointer;text-align:center}
 .carpeta b{font-size:16px}
+.resumen-simple{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.resumen-simple h3{margin:0 0 10px;font-size:16px;text-align:center}
+.resumen-fila{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:15px}
+.resumen-fila:last-child{border-bottom:0}
+.resumen-fila b{font-size:17px}
+.completado-item{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.completado-item b{font-size:16px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:99;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:400px}
+.modal h3{margin:0 0 10px}
 </style>
 </head>
 <body>
@@ -90,10 +99,17 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <div class="wrap">
 
 <div id="menu">
+<div class="resumen-simple">
+<h3>📊 Resumen</h3>
+<div class="resumen-fila"><span>📦 Total pedidos</span><b id="r-total">0</b></div>
+<div class="resumen-fila"><span>💰 Total general</span><b id="r-total-dinero">$0</b></div>
+<div class="resumen-fila"><span>🧾 Falta por cobrar</span><b id="r-resta" style="color:#cc0000">$0</b></div>
+<div class="resumen-fila"><span>✅ Pagados</span><b id="r-pagado" style="color:#0a6b0a">0</b></div>
+<div class="resumen-fila"><span>🦺 Listos</span><b id="r-listo" style="color:#856404">0</b></div>
+</div>
 <button class="btn-menu" onclick="ir('pedidos')">📝 Hacer un pedido<small>Crear un pedido nuevo</small></button>
 <button class="btn-menu" onclick="ir('guardados')" style="background:#0a4ab5">📦 Pedidos Guardados<small>Ver lo que falta por pagar</small></button>
 <button class="btn-menu" onclick="ir('reporte')" style="background:#ff8c00">🚚 Reporte de entrega<small>Marcar Listo</small></button>
-<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-listo">0</b>Listos</div><div><b id="r-resta">0</b>Falta cobrar</div></div>
 <p id="txt-permiso" style="text-align:center;color:#888;font-size:13px;margin:8px 0 0"></p>
 </div>
 
@@ -115,17 +131,27 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 
 <div id="sec-guardados" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div><div class="total" id="totalG"></div>
-<div id="carpeta-archivados"></div><div id="lista-archivados" style="display:none"></div>
-</div>
+<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div></div>
+<div class="card" style="text-align:center"><div class="carpeta" style="margin:0;background:#eef6ff" onclick="toggleCarpeta()"><b>📁 Pedidos Completados (<span id="num-completados">0</span>)</b><br><span style="font-size:13px;color:#555" id="txt-carpeta">▶ Toca para ver</span></div><div id="lista-archivados" style="display:none;text-align:left;margin-top:10px"></div></div>
 </div>
 
 <div id="sec-reporte" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><div id="lista-reporte"></div></div>
+<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><p style="color:#666;font-size:13px">Toca el nombre para copiar el pedido.</p><div id="lista-reporte"></div></div>
 </div>
 
 </div>
+</div>
+
+<div class="modal-bg" id="modal-copiar">
+  <div class="modal">
+    <h3>📋 Copiar Pedido</h3>
+    <p id="modal-texto" style="color:#666;font-size:14px"></p>
+    <label>Nombre para el nuevo pedido</label>
+    <input id="input-nuevo-nombre" placeholder="Deja igual o escribe otro nombre">
+    <button onclick="confirmarCopiar()">Crear copia con este nombre</button>
+    <button onclick="cerrarModal()" style="background:#eee;color:#333;margin-top:8px">Cancelar</button>
+  </div>
 </div>
 
 <script>
@@ -168,25 +194,32 @@ function mostrarApp(){
 document.getElementById('clave').addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
 
 let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
-// Normalizar pedidos viejos a nueva estructura
 pedidos = pedidos.map(p=>{
   if(!p.chalecos){
     let tallasArr = p.tallas ? p.tallas : (p.talla ? [p.talla] : []);
     let cant = p.cant || tallasArr.length || 1;
     let chalecos = [];
-    for(let i=0;i<cant;i++){ chalecos.push({tallas: tallasArr[i]?[tallasArr[i]]:[], telas: p.tela?[p.tela]:[], colores: p.color?[p.color]:[]}); }
+    for(let i=0;i<cant;i++){ chalecos.push({talla: tallasArr[i]||'', telas: p.tela?[p.tela]:[], colores: p.color?[p.color]:[]}); }
     p.chalecos = chalecos;
+  } else {
+    // Convertir tallas viejas de array a single
+    p.chalecos = p.chalecos.map(ch=>{
+      if(Array.isArray(ch.tallas)){ return {talla: ch.tallas[0]||'', telas: ch.telas||[], colores: ch.colores||[]}; }
+      if(ch.talla!==undefined){ return {talla: ch.talla, telas: ch.telas||[], colores: ch.colores||[]}; }
+      return ch;
+    });
   }
-  // Pagado ahora es automatico
   p.pagado = (p.resta===0 && p.total>0);
+  if(!p.fechaNum) p.fechaNum = new Date(p.fecha).getTime() || Date.now();
   return p;
 });
 
 let cantSel = 0;
 let deptoSel='';
-let chalecosSel = []; // [{tallas:[], telas:[], colores:[]}]
+let chalecosSel = [];
 let abierto = -1;
 let carpetaAbierta = false;
+let copiarIdx = -1;
 
 function renderOpts(){
   let deptos=['Aeromexico','Cargo','Connect','Marina','Remolque','Servicio'];
@@ -198,9 +231,13 @@ function renderOpts(){
 function elegirCant(n){
   cantSel=n;
   let nuevo=[];
-  for(let i=0;i<n;i++){ nuevo.push(chalecosSel[i] || {tallas:[], telas:[], colores:[]}); }
+  for(let i=0;i<n;i++){ nuevo.push(chalecosSel[i] || {talla:'', telas:[], colores:[]}); }
   chalecosSel=nuevo;
   renderOpts(); calc();
+}
+function elegirTallaUnica(idx, valor){
+  chalecosSel[idx].talla = valor;
+  renderChalecos(); calc();
 }
 function toggleMulti(chalecoIdx, tipo, valor){
   let arr = chalecosSel[chalecoIdx][tipo];
@@ -220,9 +257,9 @@ function renderChalecos(){
   let colores=['Amarillo','A. Marino','A. Rey','Gris','Naranja','Negra'];
   let html='';
   for(let i=0;i<cantSel;i++){
-    let ch = chalecosSel[i] || {tallas:[], telas:[], colores:[]};
+    let ch = chalecosSel[i] || {talla:'', telas:[], colores:[]};
     html+=`<div class="chaleco-grupo"><h4>🦺 Chaleco ${i+1}</h4>
-    <label style="margin:0">Talla - puedes elegir hasta 2</label><div class="opt-row talla">`+tallas.map(t=>`<div class="opt ${ch.tallas.includes(t)?'sel':''}" onclick="toggleMulti(${i},'tallas','${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('')+`</div>
+    <label style="margin:0">Talla - solo 1</label><div class="opt-row talla">`+tallas.map(t=>`<div class="opt ${ch.talla===t?'sel':''}" onclick="elegirTallaUnica(${i},'${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('')+`</div>
     <label style="margin:0">Tela - puedes elegir hasta 2</label><div class="opt-row">`+telas.map(t=>`<div class="opt ${ch.telas.includes(t)?'sel':''}" onclick="toggleMulti(${i},'telas','${t}')">${t}</div>`).join('')+`</div>
     <label style="margin:0">Color - puedes elegir hasta 2</label><div class="opt-row color">`+colores.map(t=>`<div class="opt ${ch.colores.includes(t)?'sel':''}" onclick="toggleMulti(${i},'colores','${t}')">${t}</div>`).join('')+`</div>
     </div>`;
@@ -234,7 +271,7 @@ function calc(){
   let ab=parseFloat(document.getElementById('abono').value||0);
   let total=0; let detalle=[];
   chalecosSel.forEach((ch,idx)=>{
-    ch.tallas.forEach(t=>{ total+=PRECIOS_TALLA[t]; detalle.push('Chaleco '+(idx+1)+' '+t+' $'+PRECIOS_TALLA[t]); });
+    if(ch.talla){ total+=PRECIOS_TALLA[ch.talla]; detalle.push('Chaleco '+(idx+1)+' '+ch.talla+' $'+PRECIOS_TALLA[ch.talla]); }
   });
   let resta=total-ab; if(resta<0) resta=0;
   document.getElementById('txt-total').innerText='$'+total;
@@ -255,17 +292,16 @@ function agregar(){
   let c=document.getElementById('nombre').value.trim();
   let ab=parseFloat(document.getElementById('abono').value||0);
   if(!c||!deptoSel||!cantSel){alert('Falta: Nombre, Departamento y Cantidad');return;}
-  // Validar al menos 1 talla por chaleco
   for(let i=0;i<chalecosSel.length;i++){
-    if(!chalecosSel[i].tallas.length){ alert('En Chaleco '+(i+1)+' elige al menos 1 talla'); return; }
+    if(!chalecosSel[i].talla){ alert('En Chaleco '+(i+1)+' elige 1 talla'); return; }
   }
   let {total,resta}=calc();
   let pagado = (resta===0 && total>0);
-  // Texto resumen para compatibilidad
-  let tallasTxt = chalecosSel.map(ch=>ch.tallas.join('+')).join(', ');
+  let tallasTxt = chalecosSel.map(ch=>ch.talla).join(', ');
   let telasTxt = chalecosSel.map(ch=>ch.telas.join('+')).join(', ');
   let coloresTxt = chalecosSel.map(ch=>ch.colores.join('+')).join(', ');
-  pedidos.unshift({c,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
+  let ahora = new Date();
+  pedidos.unshift({c,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:ahora.toLocaleString(),fechaNum:ahora.getTime(),por:usuarioActual||'Sin nombre'});
   document.getElementById('nombre').value='';document.getElementById('abono').value='';cantSel=0;chalecosSel=[];deptoSel='';renderOpts();calc();
   guardar(); alert('Pedido guardado ✅'); ir('guardados');
 }
@@ -291,6 +327,33 @@ function sumarAbono(i){
 }
 function toggleDetalle(i){ abierto = (abierto===i ? -1 : i); mostrar(); }
 function toggleCarpeta(){ carpetaAbierta=!carpetaAbierta; mostrar(); }
+function abrirCopiar(i){
+  copiarIdx=i;
+  let x=pedidos[i];
+  document.getElementById('modal-texto').innerText = 'Vas a copiar el pedido de '+x.c+' ('+x.depto+' - '+x.cant+' Chaleco(s)). Puedes dejar el mismo nombre o escribir otro.';
+  document.getElementById('input-nuevo-nombre').value = x.c;
+  document.getElementById('modal-copiar').classList.add('show');
+}
+function cerrarModal(){ document.getElementById('modal-copiar').classList.remove('show'); copiarIdx=-1; }
+function confirmarCopiar(){
+  if(copiarIdx<0) return;
+  let original = pedidos[copiarIdx];
+  let nuevoNombre = document.getElementById('input-nuevo-nombre').value.trim() || original.c;
+  let ahora = new Date();
+  let copia = JSON.parse(JSON.stringify(original));
+  copia.c = nuevoNombre;
+  copia.ab = 0;
+  copia.resta = copia.total;
+  copia.pagado = false;
+  copia.listo = false;
+  copia.fecha = ahora.toLocaleString();
+  copia.fechaNum = ahora.getTime();
+  copia.por = usuarioActual || 'Copia';
+  pedidos.unshift(copia);
+  guardar(); cerrarModal();
+  alert('Pedido copiado ✅ Nuevo pedido para '+nuevoNombre);
+  ir('guardados');
+}
 function descargarImagen(i){
   let x=pedidos[i];
   let cv=document.createElement('canvas'); cv.width=700; cv.height=900;
@@ -306,15 +369,15 @@ function descargarImagen(i){
   if(x.chalecos){
     x.chalecos.forEach((ch,idx)=>{
       y+=10; ctx.font='700 26px sans-serif'; ctx.fillText('Chaleco '+(idx+1)+':',40,y); y+=36;
-      ctx.font='400 22px sans-serif'; ctx.fillText('Talla: '+ch.tallas.join(' + '),60,y); y+=32;
-      ctx.fillText('Tela: '+ch.telas.join(' + '),60,y); y+=32;
-      ctx.fillText('Color: '+ch.colores.join(' + '),60,y); y+=10;
+      ctx.font='400 22px sans-serif'; ctx.fillText('Talla: '+(ch.talla||''),60,y); y+=32;
+      ctx.fillText('Tela: '+ (ch.telas?ch.telas.join(' + '):''),60,y); y+=32;
+      ctx.fillText('Color: '+ (ch.colores?ch.colores.join(' + '):''),60,y); y+=10;
     });
   }
   ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,870);
   let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
 }
-function htmlPedidoDetalle(x,i,esArchivado){
+function htmlPedidoDetalle(x,i){
   let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
   let abonoHTML = '';
   if(puedeModificarAbonos()){
@@ -324,7 +387,7 @@ function htmlPedidoDetalle(x,i,esArchivado){
   }
   let chalecosTxt = '';
   if(x.chalecos){
-    chalecosTxt = x.chalecos.map((ch,idx)=>`Chaleco ${idx+1}: Talla ${ch.tallas.join(' + ')||'-'} | Tela ${ch.telas.join(' + ')||'-'} | Color ${ch.colores.join(' + ')||'-'}`).join('<br>');
+    chalecosTxt = x.chalecos.map((ch,idx)=>`Chaleco ${idx+1}: Talla ${ch.talla||'-'} | Tela ${ch.telas?ch.telas.join(' + '):'-'} | Color ${ch.colores?ch.colores.join(' + '):'-'}`).join('<br>');
   } else {
     chalecosTxt = `Tallas: ${x.talla||''} | Tela: ${x.tela||''} | Color: ${x.color||''}`;
   }
@@ -344,34 +407,44 @@ function htmlPedidoDetalle(x,i,esArchivado){
 function mostrar(){
   let activos = pedidos.map((p,idx)=>({p,idx})).filter(o=>!(o.p.listo && o.p.pagado));
   let archivados = pedidos.map((p,idx)=>({p,idx})).filter(o=>(o.p.listo && o.p.pagado));
+  // Ordenar archivados por fecha de pedido (mas reciente primero)
+  archivados.sort((a,b)=>(b.p.fechaNum||0)-(a.p.fechaNum||0));
   let totG=0; let faltaTotal=0;
   pedidos.forEach(x=>{ totG+=x.total; faltaTotal+=x.resta; });
   let h='';
-  activos.forEach(o=>{ h+=htmlPedidoDetalle(o.p,o.idx,false); });
-  if(!activos.length) h='<p style="color:#888">No hay pedidos activos. Los completados están en Archivados abajo.</p>';
+  activos.forEach(o=>{ h+=htmlPedidoDetalle(o.p,o.idx); });
+  if(!activos.length) h='<p style="color:#888">No hay pedidos activos. Los completados están abajo en Pedidos Completados.</p>';
   document.getElementById('lista').innerHTML=h;
-  document.getElementById('totalG').innerText='Total general: $'+totG+' | Falta cobrar: $'+faltaTotal;
-  document.getElementById('carpeta-archivados').innerHTML = `<div class="carpeta" onclick="toggleCarpeta()"><b>📁 Archivados - Completados (Listo + Pagado) (${archivados.length})</b><br><span style="font-size:13px;color:#555">${carpetaAbierta?'▼ Cerrar carpeta':'▶ Toca para ver los completados'}</span></div>`;
+
+  // Carpeta completados hasta abajo, solo nombre y departamento
+  document.getElementById('num-completados').innerText = archivados.length;
+  document.getElementById('txt-carpeta').innerText = carpetaAbierta ? '▼ Cerrar' : '▶ Toca para ver';
   let ha='';
-  archivados.forEach(o=>{ ha+=htmlPedidoDetalle(o.p,o.idx,true); });
-  if(!archivados.length) ha='<p style="color:#888">Aún no hay archivados.</p>';
+  archivados.forEach(o=>{
+    ha+=`<div class="completado-item"><div><b>${o.p.c}</b><br><span style="color:#666;font-size:13px">${o.p.depto}</span></div><span style="font-size:12px;color:#888">${o.p.fecha||''}</span></div>`;
+  });
+  if(!archivados.length) ha='<p style="color:#888">Aún no hay completados.</p>';
   document.getElementById('lista-archivados').innerHTML=ha;
   document.getElementById('lista-archivados').style.display = carpetaAbierta ? 'block' : 'none';
 
   let hr='';
   let puedeReporte = puedeModificarReporte();
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="reporte-item"><div class="info"><b>${x.c}</b><span style="font-size:13px;color:#666">${x.depto}</span></div>
+    // En reporte solo activos? Mostramos todos, pero los completados ya estan archivados, igual se ven
+    hr+=`<div class="reporte-item"><div class="info" onclick="abrirCopiar(${i})"><b>${x.c} 📋</b><span style="font-size:12px;color:#888">Toca para copiar pedido</span></div>
     <span class="badge ${x.pagado?'badge-pagado':'badge-no'}" style="white-space:nowrap">${x.pagado?'✓ Pagado':'○ Falta $'+x.resta}</span>
     ${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 95px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 95px"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ Listo'}</label>`}
     </div>`;
   });
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
+
+  // Resumen simple en menu principal
   document.getElementById('r-total').innerText=pedidos.length;
+  document.getElementById('r-total-dinero').innerText='$'+totG;
+  document.getElementById('r-resta').innerText='$'+faltaTotal;
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
   document.getElementById('r-listo').innerText=pedidos.filter(x=>x.listo).length;
-  document.getElementById('r-resta').innerText='$'+faltaTotal;
 }
 mostrarApp();
 </script>
