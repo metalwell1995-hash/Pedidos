@@ -20,7 +20,6 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .pedido{border-top:1px solid #eee;padding:12px 0}
 .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;margin:2px}
 .badge-pagado{background:#d9f7d9;color:#0a6b0a}
-.badge-entregado{background:#dbeafe;color:#0a4ab5}
 .badge-listo{background:#fff3cd;color:#856404}
 .badge-no{background:#eee;color:#888}
 .img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
@@ -31,16 +30,15 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
 .check-box.disabled{opacity:.6;background:#eee}
 .check-box.on-pagado{background:#d9f7d9}
-.check-box.on-entregado{background:#dbeafe}
 .check-box.on-listo{background:#fff3cd}
 .resumen{display:flex;gap:8px;text-align:center}
 .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
 .resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
-.opt-row{display:flex;gap:8px;margin:4px 0 8px;flex-wrap:wrap}
-.opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff;min-width:70px}
+.opt-row{display:flex;gap:6px;margin:4px 0 8px;flex-wrap:wrap}
+.opt{flex:1;padding:8px 4px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:700;cursor:pointer;background:#fff;min-width:52px;font-size:13px}
 .opt.sel{background:#111;color:#fff}
-.opt small{display:block;font-weight:400;font-size:12px;margin-top:2px}
+.opt small{display:block;font-weight:400;font-size:11px;margin-top:1px}
 .calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0}
 .calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
 .calc b{font-size:17px}
@@ -55,6 +53,17 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .progress{background:#eee;border-radius:20px;height:10px;overflow:hidden;margin:6px 0}
 .progress div{background:#0a6b0a;height:100%}
 .aviso{font-size:13px;color:#888;text-align:center;background:#fff3cd;padding:8px;border-radius:8px;margin-bottom:10px}
+.pedido-mini{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:pointer}
+.pedido-mini b{font-size:17px}
+.pedido-mini .resta{font-weight:800;font-size:16px;color:#cc0000}
+.pedido-mini .resta.ok{color:#0a6b0a}
+.detalle{display:none;background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
+.detalle.show{display:block}
+.reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.reporte-item .info b{font-size:17px;display:block}
+.reporte-item .info span{font-size:13px;color:#666}
+.talla-grupo{margin:6px 0;padding:8px;background:#f9f9f9;border-radius:10px}
+.talla-grupo label{margin:0;font-size:12px}
 </style>
 </head>
 <body>
@@ -79,9 +88,9 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 
 <div id="menu">
 <button class="btn-menu" onclick="ir('pedidos')">📝 Hacer un pedido<small>Crear un pedido nuevo</small></button>
-<button class="btn-menu" onclick="ir('guardados')" style="background:#0a4ab5">📦 Pedidos Guardados<small>Ver pedidos y sumar abono</small></button>
-<button class="btn-menu" onclick="ir('reporte')" style="background:#ff8c00">🚚 Reporte de entrega<small>Ver Listo / Entregado</small></button>
-<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div><div><b id="r-listo">0</b>Listos</div></div>
+<button class="btn-menu" onclick="ir('guardados')" style="background:#0a4ab5">📦 Pedidos Guardados<small>Ver lo que falta por pagar</small></button>
+<button class="btn-menu" onclick="ir('reporte')" style="background:#ff8c00">🚚 Reporte de entrega<small>Marcar Listo</small></button>
+<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-listo">0</b>Listos</div><div><b id="r-resta">0</b>Falta cobrar</div></div>
 <p id="txt-permiso" style="text-align:center;color:#888;font-size:13px;margin:8px 0 0"></p>
 </div>
 
@@ -93,13 +102,12 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <label>Departamento</label>
 <div class="opt-row" id="deptos"></div>
 <label>Cantidad</label>
-<select id="cantidad"><option value="">Elige 1 al 5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
-<label>Talla - El precio se pone solo</label><div class="opt-row" id="tallas"></div>
+<select id="cantidad" onchange="cambioCantidad()"><option value="">Elige 1 al 5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Talla - Elige una por cada prenda</label><div id="tallas-container"></div>
 <label>Tela</label><div class="opt-row" id="telas"></div>
-<label>Color</label><input id="color" placeholder="Ej: Negro, Rosa, Blanco...">
-<label>Precio Prenda</label><input id="precio" type="number" placeholder="$" oninput="calc()">
+<label>Color</label><div class="opt-row" id="colores"></div>
 <label>Abono</label><input id="abono" type="number" placeholder="$" oninput="calc()">
-<div class="calc"><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Total:</span><b id="txt-total">$0</b></div></div>
+<div class="calc"><div><span>Total:</span><b id="txt-total">$0</b></div><div><span>Abono:</span><span id="txt-abono">$0</span></div><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Precio por prenda:</span><span id="txt-detalle-precio">-</span></div></div>
 <button onclick="agregar()">+ Agregar Pedido</button>
 </div>
 </div>
@@ -120,15 +128,14 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <script>
 let USUARIOS = {"Norbert":"Norbert","Gaby":"Gaby","Normis":"Normis"};
 let usuarioActual = localStorage.getItem('usuario_gaby') || '';
-let PRECIOS_TALLA = {"XL":300,"L":280,"M":260,"S":240,"XS":220};
+let PRECIOS_TALLA = {"XCH":220,"CH":240,"M":260,"G":280,"XL":300,"XL1":320,"XL2":340};
 
-// --- PERMISOS CORREGIDOS: TODOS PUEDEN VER, SOLO SE BLOQUEA MODIFICAR ---
 function puedeModificarAbonos(){
-  if(usuarioActual==='Normis') return false; // Normis ve pero NO abona ni marca Pagado
+  if(usuarioActual==='Normis') return false;
   return true;
 }
 function puedeModificarReporte(){
-  if(usuarioActual==='Gaby') return false; // Gaby ve pero NO marca Listo / Entregado
+  if(usuarioActual==='Gaby') return false;
   return true;
 }
 
@@ -160,40 +167,65 @@ function mostrarApp(){
   document.getElementById('app').style.display='block';
   document.getElementById('txt-usuario').innerText = 'Hola, ' + usuarioActual + ' 👋';
   let txt='';
-  if(usuarioActual==='Gaby') txt='Eres Gaby: Puedes ver Reporte, pero no puedes marcar Listo / Entregado';
-  if(usuarioActual==='Normis') txt='Eres Normis: Puedes ver Pedidos Guardados, pero no puedes abonar';
+  if(usuarioActual==='Gaby') txt='Eres Gaby: Puedes ver Reporte, pero no puedes marcar Listo. Sí puedes abonar.';
+  if(usuarioActual==='Normis') txt='Eres Normis: Puedes ver Pedidos Guardados, pero no puedes abonar. Sí puedes marcar Listo.';
   if(usuarioActual==='Norbert') txt='Eres Norbert: Puedes modificar todo';
   document.getElementById('txt-permiso').innerText=txt;
-  // Avisos dentro de cada sección
-  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Aquí puedes sumar abono y marcar Pagado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono ni marcar Pagado.</div>';
-  document.getElementById('aviso-reporte').innerHTML = puedeModificarReporte() ? '<span style="color:#666;font-size:13px">Marca Listo / Entregado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo / Entregado.</div>';
+  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Toca el nombre para ver detalle y abonar.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono ni marcar Pagado.</div>';
+  document.getElementById('aviso-reporte').innerHTML = puedeModificarReporte() ? '<span style="color:#666;font-size:13px">Marca Listo cuando ya esté terminado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo.</div>';
   mostrar();
 }
 document.getElementById('clave').addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
 
 let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
-let tallaSel='', telaSel='', deptoSel='';
+let tallasSel = []; // una talla por cada cantidad
+let telaSel='', deptoSel='', colorSel='';
+let abierto = -1;
+
 function renderOpts(){
-  let deptos=['Marina','Kone','Cargo'];
+  let deptos=['Aeromexico','Cargo','Connect','Marina','Remolque','Servicio'];
   document.getElementById('deptos').innerHTML=deptos.map(t=>`<div class="opt ${deptoSel===t?'sel':''}" onclick="deptoSel='${t}';renderOpts()">● ${t}</div>`).join('');
-  let tallas=['XL','L','M','S','XS'];
-  document.getElementById('tallas').innerHTML=tallas.map(t=>`<div class="opt ${tallaSel===t?'sel':''}" onclick="elegirTalla('${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('');
-  let telas=['Suave','Delgada'];
+  let telas=['Gabardina','Lisa','Puntitos','Red'];
   document.getElementById('telas').innerHTML=telas.map(t=>`<div class="opt ${telaSel===t?'sel':''}" onclick="telaSel='${t}';renderOpts()">${t}</div>`).join('');
+  let colores=['Amarillo','A. Marino','A. Rey','Gris','Naranja','Negra'];
+  document.getElementById('colores').innerHTML=colores.map(t=>`<div class="opt ${colorSel===t?'sel':''}" onclick="colorSel='${t}';renderOpts()">● ${t}</div>`).join('');
+  renderTallas();
 }
-function elegirTalla(t){
-  tallaSel=t;
-  document.getElementById('precio').value = PRECIOS_TALLA[t];
-  renderOpts(); calc();
+function cambioCantidad(){
+  let cant = parseInt(document.getElementById('cantidad').value||0);
+  // Ajustar array de tallas al tamaño de cantidad, conservar las ya elegidas
+  let nuevo = [];
+  for(let i=0;i<cant;i++){ nuevo.push(tallasSel[i]||''); }
+  tallasSel = nuevo;
+  renderTallas(); calc();
+}
+function renderTallas(){
+  let cant = parseInt(document.getElementById('cantidad').value||0);
+  let cont = document.getElementById('tallas-container');
+  if(!cant){ cont.innerHTML='<p style="color:#888;font-size:13px">Primero elige la cantidad</p>'; return; }
+  let tallas=['XCH','CH','M','G','XL','XL1','XL2'];
+  let html='';
+  for(let i=0;i<cant;i++){
+    html += `<div class="talla-grupo"><label>Prenda ${i+1} - Talla</label><div class="opt-row">` + tallas.map(t=>`<div class="opt ${tallasSel[i]===t?'sel':''}" onclick="elegirTallaPos(${i},'${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('') + `</div></div>`;
+  }
+  cont.innerHTML=html;
+}
+function elegirTallaPos(pos,t){
+  tallasSel[pos]=t;
+  renderTallas(); calc();
 }
 renderOpts();
 function calc(){
-  let pr=parseFloat(document.getElementById('precio').value||0);
-  let cant=parseInt(document.getElementById('cantidad').value||0);
+  let cant = parseInt(document.getElementById('cantidad').value||0);
   let ab=parseFloat(document.getElementById('abono').value||0);
-  let total=pr*cant; let resta=total-ab; if(resta<0) resta=0;
+  let total=0;
+  let detalle=[];
+  tallasSel.forEach(t=>{ if(t){ total+=PRECIOS_TALLA[t]; detalle.push(t+' $'+PRECIOS_TALLA[t]); } });
+  let resta=total-ab; if(resta<0) resta=0;
   document.getElementById('txt-total').innerText='$'+total;
+  document.getElementById('txt-abono').innerText='$'+ab;
   document.getElementById('txt-resta').innerText='$'+resta;
+  document.getElementById('txt-detalle-precio').innerText= detalle.join(' + ') || '-';
   return {total,resta};
 }
 function guardar(){localStorage.setItem('pedidos_gaby',JSON.stringify(pedidos));mostrar();}
@@ -207,15 +239,15 @@ function ir(v){
 function agregar(){
   let c=document.getElementById('nombre').value.trim();
   let cant=parseInt(document.getElementById('cantidad').value||0);
-  let color=document.getElementById('color').value.trim();
-  let pr=parseFloat(document.getElementById('precio').value||0);
   let ab=parseFloat(document.getElementById('abono').value||0);
-  if(!c||!deptoSel||!cant||!tallaSel||!telaSel||!color||!pr){alert('Falta llenar: Nombre, Departamento, Cantidad, Talla, Tela, Color y Precio');return;}
+  if(!c||!deptoSel||!cant||!telaSel||!colorSel){alert('Falta llenar: Nombre, Departamento, Cantidad, Tela y Color');return;}
+  if(tallasSel.length!==cant || tallasSel.includes('') || tallasSel.includes(undefined)){alert('Elige una talla para cada prenda. Si son '+cant+' prendas, debes elegir '+cant+' tallas');return;}
   let {total,resta}=calc();
   let pagado = ab >= total;
-  pedidos.unshift({c,depto:deptoSel,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado,entregado:false,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
-  document.getElementById('nombre').value='';document.getElementById('cantidad').value='';document.getElementById('color').value='';document.getElementById('precio').value='';document.getElementById('abono').value='';tallaSel='';telaSel='';deptoSel='';renderOpts();calc();
-  guardar(); alert('Pedido guardado ✅'); ir('menu');
+  let tallasTxt = tallasSel.join(', ');
+  pedidos.unshift({c,depto:deptoSel,cant,tallas:[...tallasSel],talla:tallasTxt,tela:telaSel,color:colorSel,pr: total/cant,ab,total,resta,pagado,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
+  document.getElementById('nombre').value='';document.getElementById('cantidad').value='';document.getElementById('abono').value='';tallasSel=[];telaSel='';deptoSel='';colorSel='';renderOpts();calc();
+  guardar(); alert('Pedido guardado ✅'); ir('guardados');
 }
 function eliminar(i){
   if(!puedeModificarAbonos() && usuarioActual==='Normis'){ alert('🔒 Normis solo puede ver, no puede eliminar'); return; }
@@ -223,7 +255,7 @@ function eliminar(i){
 }
 function toggle(i,campo){
   if(campo==='pagado' && !puedeModificarAbonos()){ alert('🔒 Normis no puede marcar Pagado, solo ver'); mostrar(); return; }
-  if((campo==='listo'||campo==='entregado') && !puedeModificarReporte()){ alert('🔒 Gaby no puede marcar Listo / Entregado, solo ver'); mostrar(); return; }
+  if(campo==='listo' && !puedeModificarReporte()){ alert('🔒 Gaby no puede marcar Listo, solo ver'); mostrar(); return; }
   pedidos[i][campo]=!pedidos[i][campo];guardar();
 }
 function sumarAbono(i){
@@ -237,6 +269,10 @@ function sumarAbono(i){
   guardar();
   alert('Abono sumado ✅ Ahora lleva $'+pedidos[i].ab+' de $'+pedidos[i].total);
 }
+function toggleDetalle(i){
+  abierto = (abierto===i ? -1 : i);
+  mostrar();
+}
 function descargarImagen(i){
   let x=pedidos[i];
   let cv=document.createElement('canvas'); cv.width=700; cv.height=820;
@@ -247,55 +283,54 @@ function descargarImagen(i){
   ctx.fillText('🐾 GABY Y NORMIS',350,65); ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
   ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 28px sans-serif';
   let y=190;
-  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Talla:',x.talla],['Tela:',x.tela],['Color:',x.color],['Precio Prenda:','$'+x.pr],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Entregado:',x.entregado?'SI':'NO'],['Fecha:',x.fecha||'']];
+  let tallasTxt = x.tallas ? x.tallas.join(', ') : (x.talla||'');
+  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Tallas:',tallasTxt],['Tela:',x.tela],['Color:',x.color],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
   lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
   ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,790);
   let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
 }
 function mostrar(){
-  let h='';let totG=0;
+  let h='';let totG=0; let faltaTotal=0;
   pedidos.forEach((x,i)=>{
-    totG+=x.total;
+    totG+=x.total; faltaTotal+=x.resta;
     let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
+    let tallasTxt = x.tallas ? x.tallas.join(', ') : (x.talla||'');
     let abonoHTML = '';
     if(puedeModificarAbonos()){
-      abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i})">+ Sumar Abono</button>
+      abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i});event.stopPropagation()">+ Sumar Abono</button>
       <label class="check-box ${x.pagado?'on-pagado':''}" style="margin-top:8px"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Marcar como Pagado</label></div>`;
     } else {
-      abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver el abono. No puedes sumar.</p>
-      <label class="check-box disabled ${x.pagado?'on-pagado':''}" style="margin-top:8px"><input type="checkbox" disabled ${x.pagado?'checked':''}> ${x.pagado?'✓ Pagado':'○ No Pagado'} (solo ver)</label></div>`;
+      abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver. No puedes sumar abono.</p></div>`;
     }
-    h+=`<div class="pedido"><b>${x.c}</b> <span style="color:#666">- ${x.depto} | ${x.cant} pzs | Talla ${x.talla} | ${x.tela} | ${x.color}</span><br>
-    <span class="small">Precio: $${x.pr} | Abono: $${x.ab} | Resta: $${x.resta} | <b>Total: $${x.total}</b> | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
-    <div class="progress"><div style="width:${pct}%"></div></div>
-    <small>${pct}% pagado</small><br>
-    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':'<span class="badge badge-no">○ No Entregado</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':''}<br>
-    ${abonoHTML}
-    <button class="img-btn" onclick="descargarImagen(${i})">⬇ Descargar imagen</button>
-    ${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i})">🗑 Eliminar</button>`:''}</div>`;
+    let isOpen = abierto===i;
+    h+=`<div>
+    <div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} prenda(s) • ${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div>
+    <div class="detalle ${isOpen?'show':''}">
+      <span class="small">Tallas: ${tallasTxt} | Tela: ${x.tela} | Color: ${x.color} | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
+      <span class="small">Total: $${x.total} | Abono: $${x.ab} | Resta: $${x.resta}</span><br>
+      <div class="progress"><div style="width:${pct}%"></div></div><small>${pct}% pagado</small><br>
+      ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}<br>
+      ${abonoHTML}
+      <button class="img-btn" onclick="descargarImagen(${i});event.stopPropagation()">⬇ Descargar imagen</button>
+      ${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i});event.stopPropagation()">🗑 Eliminar</button>`:''}
+    </div></div>`;
   });
   if(!pedidos.length) h='<p style="color:#888">Aún no hay pedidos</p>';
   document.getElementById('lista').innerHTML=h;
-  document.getElementById('totalG').innerText='Total general: $'+totG;
+  document.getElementById('totalG').innerText='Total general: $'+totG+' | Falta cobrar: $'+faltaTotal;
   let hr='';
   let puedeReporte = puedeModificarReporte();
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto}</div>
-    ${puedeReporte ? `<div class="check-row">
-    <label class="check-box ${x.listo?'on-listo':''}"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>
-    <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
-    </div>` : `<div class="check-row">
-    <label class="check-box disabled ${x.listo?'on-listo':''}"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ No Listo'} (solo ver)</label>
-    <label class="check-box disabled ${x.entregado?'on-entregado':''}"><input type="checkbox" disabled ${x.entregado?'checked':''}> ${x.entregado?'✓ Entregado':'○ No Entregado'} (solo ver)</label>
-    </div>`}
+    hr+=`<div class="reporte-item"><div class="info"><b>${x.c}</b><span>${x.depto} • ${x.cant} prenda(s) • Tallas: ${x.tallas ? x.tallas.join(', ') : (x.talla||'')}</span><br>${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}</div>
+    ${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 110px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 110px"><input type="checkbox" disabled ${x.listo?'checked':''}> Solo ver</label>`}
     </div>`;
   });
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
   document.getElementById('r-total').innerText=pedidos.length;
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
-  document.getElementById('r-entregado').innerText=pedidos.filter(x=>x.entregado).length;
   document.getElementById('r-listo').innerText=pedidos.filter(x=>x.listo).length;
+  document.getElementById('r-resta').innerText='$'+faltaTotal;
 }
 mostrarApp();
 </script>
