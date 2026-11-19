@@ -21,23 +21,26 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;margin:2px}
 .badge-pagado{background:#d9f7d9;color:#0a6b0a}
 .badge-entregado{background:#dbeafe;color:#0a4ab5}
+.badge-listo{background:#fff3cd;color:#856404}
 .badge-no{background:#eee;color:#888}
-/* BOTONES ARREGLADOS */
 .img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
 .del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
 .total{font-size:18px;font-weight:800;text-align:right}
 .check-row{display:flex;gap:10px;margin-top:10px}
 .check-box{flex:1;display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:12px;font-size:14px;font-weight:700}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
+.check-box.disabled{opacity:.6;background:#eee}
 .check-box.on-pagado{background:#d9f7d9}
 .check-box.on-entregado{background:#dbeafe}
+.check-box.on-listo{background:#fff3cd}
 .resumen{display:flex;gap:8px;text-align:center}
 .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
 .resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
-.opt-row{display:flex;gap:8px;margin:4px 0 8px}
-.opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff}
+.opt-row{display:flex;gap:8px;margin:4px 0 8px;flex-wrap:wrap}
+.opt{flex:1;padding:12px;border:1px solid #ddd;border-radius:10px;text-align:center;font-weight:700;cursor:pointer;background:#fff;min-width:70px}
 .opt.sel{background:#111;color:#fff}
+.opt small{display:block;font-weight:400;font-size:12px;margin-top:2px}
 .calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0}
 .calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
 .calc b{font-size:17px}
@@ -46,6 +49,12 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .user-bar button{width:auto;padding:6px 12px;font-size:13px;background:#eee;color:#333;border-radius:20px}
 #login{max-width:400px;margin:60px auto;padding:20px;text-align:center}
 #login .card{padding:22px}
+.abono-box{background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
+.abono-box input{margin:4px 0}
+.btn-sumar{background:#0a6b0a;padding:10px;font-size:14px}
+.progress{background:#eee;border-radius:20px;height:10px;overflow:hidden;margin:6px 0}
+.progress div{background:#0a6b0a;height:100%}
+.aviso{font-size:13px;color:#888;text-align:center;background:#fff3cd;padding:8px;border-radius:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -56,7 +65,7 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
   <p style="color:#666;font-size:14px">Escribe tu clave de equipo para entrar</p>
   <div class="card">
     <label style="text-align:left">Tu clave</label>
-    <input id="clave" type="password" placeholder="Ej: Normis80">
+    <input id="clave" type="password" placeholder="Ej: Gaby">
     <button onclick="entrar()">Entrar</button>
     <p id="error-login" style="color:#cc0000;font-size:13px;display:none">Clave incorrecta, intenta de nuevo</p>
   </div>
@@ -67,21 +76,25 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <header><span>🐾</span><br>GABY Y NORMIS</header>
 <div class="user-bar"><span id="txt-usuario">Hola</span><button onclick="salir()">Salir</button></div>
 <div class="wrap">
+
 <div id="menu">
-<button class="btn-menu" onclick="ir('pedidos')">📦 Pedidos<small>Agregar y ver pedidos</small></button>
-<button class="btn-menu" onclick="ir('reporte')" style="background:#0a4ab5">🚚 Reporte de entrega<small>Solo aquí puedes palomear Pagado / Entregado</small></button>
-<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div></div>
+<button class="btn-menu" onclick="ir('pedidos')">📝 Hacer un pedido<small>Crear un pedido nuevo</small></button>
+<button class="btn-menu" onclick="ir('guardados')" style="background:#0a4ab5">📦 Pedidos Guardados<small>Ver pedidos y sumar abono</small></button>
+<button class="btn-menu" onclick="ir('reporte')" style="background:#ff8c00">🚚 Reporte de entrega<small>Ver Listo / Entregado</small></button>
+<div class="resumen"><div><b id="r-total">0</b>Total</div><div><b id="r-pagado">0</b>Pagados</div><div><b id="r-entregado">0</b>Entregados</div><div><b id="r-listo">0</b>Listos</div></div>
+<p id="txt-permiso" style="text-align:center;color:#888;font-size:13px;margin:8px 0 0"></p>
 </div>
+
 <div id="sec-pedidos" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
 <div class="card">
 <h3 style="margin:0">Nuevo Pedido</h3>
 <label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
 <label>Departamento</label>
-<select id="depto"><option value="">Elige departamento</option><option>Arriba</option><option>Abajo</option><option>Enmedio</option></select>
+<div class="opt-row" id="deptos"></div>
 <label>Cantidad</label>
-<select id="cantidad"><option value="">Elige 1 al 10</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
-<label>Talla</label><div class="opt-row" id="tallas"></div>
+<select id="cantidad"><option value="">Elige 1 al 5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+<label>Talla - El precio se pone solo</label><div class="opt-row" id="tallas"></div>
 <label>Tela</label><div class="opt-row" id="telas"></div>
 <label>Color</label><input id="color" placeholder="Ej: Negro, Rosa, Blanco...">
 <label>Precio Prenda</label><input id="precio" type="number" placeholder="$" oninput="calc()">
@@ -89,24 +102,41 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <div class="calc"><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Total:</span><b id="txt-total">$0</b></div></div>
 <button onclick="agregar()">+ Agregar Pedido</button>
 </div>
-<div class="card"><h3 style="margin:0">Pedidos Guardados</h3><div id="lista"></div><div class="total" id="totalG"></div><button onclick="borrarTodo()" style="background:#eee;color:#333;margin-top:10px">Borrar todo</button></div>
 </div>
+
+<div id="sec-guardados" style="display:none">
+<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
+<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div><div class="total" id="totalG"></div></div>
+</div>
+
 <div id="sec-reporte" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p style="color:#666;font-size:13px">Solo aquí puedes seleccionar Pagado / Entregado.</p><div id="lista-reporte"></div></div>
+<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><div id="lista-reporte"></div></div>
 </div>
+
 </div>
 </div>
 
 <script>
-let USUARIOS = {"Normis80":"Normis","Gaby70":"Gaby","Norbert":"Norbert"};
+let USUARIOS = {"Norbert":"Norbert","Gaby":"Gaby","Normis":"Normis"};
 let usuarioActual = localStorage.getItem('usuario_gaby') || '';
+let PRECIOS_TALLA = {"XL":300,"L":280,"M":260,"S":240,"XS":220};
+
+// --- PERMISOS CORREGIDOS: TODOS PUEDEN VER, SOLO SE BLOQUEA MODIFICAR ---
+function puedeModificarAbonos(){
+  if(usuarioActual==='Normis') return false; // Normis ve pero NO abona ni marca Pagado
+  return true;
+}
+function puedeModificarReporte(){
+  if(usuarioActual==='Gaby') return false; // Gaby ve pero NO marca Listo / Entregado
+  return true;
+}
+
 function entrar(){
   let c = document.getElementById('clave').value.trim();
   if(USUARIOS[c]){
     usuarioActual = USUARIOS[c];
     localStorage.setItem('usuario_gaby', usuarioActual);
-    localStorage.setItem('clave_gaby', c);
     document.getElementById('error-login').style.display='none';
     mostrarApp();
   } else {
@@ -115,7 +145,6 @@ function entrar(){
 }
 function salir(){
   localStorage.removeItem('usuario_gaby');
-  localStorage.removeItem('clave_gaby');
   usuarioActual='';
   document.getElementById('login').style.display='block';
   document.getElementById('app').style.display='none';
@@ -130,17 +159,32 @@ function mostrarApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('txt-usuario').innerText = 'Hola, ' + usuarioActual + ' 👋';
+  let txt='';
+  if(usuarioActual==='Gaby') txt='Eres Gaby: Puedes ver Reporte, pero no puedes marcar Listo / Entregado';
+  if(usuarioActual==='Normis') txt='Eres Normis: Puedes ver Pedidos Guardados, pero no puedes abonar';
+  if(usuarioActual==='Norbert') txt='Eres Norbert: Puedes modificar todo';
+  document.getElementById('txt-permiso').innerText=txt;
+  // Avisos dentro de cada sección
+  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Aquí puedes sumar abono y marcar Pagado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono ni marcar Pagado.</div>';
+  document.getElementById('aviso-reporte').innerHTML = puedeModificarReporte() ? '<span style="color:#666;font-size:13px">Marca Listo / Entregado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo / Entregado.</div>';
   mostrar();
 }
 document.getElementById('clave').addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
 
 let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
-let tallaSel='', telaSel='';
+let tallaSel='', telaSel='', deptoSel='';
 function renderOpts(){
+  let deptos=['Marina','Kone','Cargo'];
+  document.getElementById('deptos').innerHTML=deptos.map(t=>`<div class="opt ${deptoSel===t?'sel':''}" onclick="deptoSel='${t}';renderOpts()">● ${t}</div>`).join('');
   let tallas=['XL','L','M','S','XS'];
-  document.getElementById('tallas').innerHTML=tallas.map(t=>`<div class="opt ${tallaSel===t?'sel':''}" onclick="tallaSel='${t}';renderOpts()">${t}</div>`).join('');
+  document.getElementById('tallas').innerHTML=tallas.map(t=>`<div class="opt ${tallaSel===t?'sel':''}" onclick="elegirTalla('${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('');
   let telas=['Suave','Delgada'];
   document.getElementById('telas').innerHTML=telas.map(t=>`<div class="opt ${telaSel===t?'sel':''}" onclick="telaSel='${t}';renderOpts()">${t}</div>`).join('');
+}
+function elegirTalla(t){
+  tallaSel=t;
+  document.getElementById('precio').value = PRECIOS_TALLA[t];
+  renderOpts(); calc();
 }
 renderOpts();
 function calc(){
@@ -153,23 +197,46 @@ function calc(){
   return {total,resta};
 }
 function guardar(){localStorage.setItem('pedidos_gaby',JSON.stringify(pedidos));mostrar();}
-function ir(v){document.getElementById('menu').style.display=v==='menu'?'block':'none';document.getElementById('sec-pedidos').style.display=v==='pedidos'?'block':'none';document.getElementById('sec-reporte').style.display=v==='reporte'?'block':'none';mostrar();window.scrollTo(0,0);}
+function ir(v){
+  document.getElementById('menu').style.display=v==='menu'?'block':'none';
+  document.getElementById('sec-pedidos').style.display=v==='pedidos'?'block':'none';
+  document.getElementById('sec-guardados').style.display=v==='guardados'?'block':'none';
+  document.getElementById('sec-reporte').style.display=v==='reporte'?'block':'none';
+  mostrar();window.scrollTo(0,0);
+}
 function agregar(){
   let c=document.getElementById('nombre').value.trim();
-  let depto=document.getElementById('depto').value;
   let cant=parseInt(document.getElementById('cantidad').value||0);
   let color=document.getElementById('color').value.trim();
   let pr=parseFloat(document.getElementById('precio').value||0);
   let ab=parseFloat(document.getElementById('abono').value||0);
-  if(!c||!depto||!cant||!tallaSel||!telaSel||!color||!pr){alert('Falta llenar: Nombre, Departamento, Cantidad, Talla, Tela, Color y Precio');return;}
+  if(!c||!deptoSel||!cant||!tallaSel||!telaSel||!color||!pr){alert('Falta llenar: Nombre, Departamento, Cantidad, Talla, Tela, Color y Precio');return;}
   let {total,resta}=calc();
-  pedidos.unshift({c,depto,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado:false,entregado:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
-  document.getElementById('nombre').value='';document.getElementById('depto').value='';document.getElementById('cantidad').value='';document.getElementById('color').value='';document.getElementById('precio').value='';document.getElementById('abono').value='';tallaSel='';telaSel='';renderOpts();calc();
-  guardar(); alert('Pedido guardado ✅');
+  let pagado = ab >= total;
+  pedidos.unshift({c,depto:deptoSel,cant,talla:tallaSel,tela:telaSel,color,pr,ab,total,resta,pagado,entregado:false,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
+  document.getElementById('nombre').value='';document.getElementById('cantidad').value='';document.getElementById('color').value='';document.getElementById('precio').value='';document.getElementById('abono').value='';tallaSel='';telaSel='';deptoSel='';renderOpts();calc();
+  guardar(); alert('Pedido guardado ✅'); ir('menu');
 }
-function eliminar(i){if(confirm('¿Eliminar este pedido?')){pedidos.splice(i,1);guardar();}}
-function borrarTodo(){if(confirm('¿Borrar todo?')){pedidos=[];guardar();}}
-function toggle(i,campo){pedidos[i][campo]=!pedidos[i][campo];guardar();}
+function eliminar(i){
+  if(!puedeModificarAbonos() && usuarioActual==='Normis'){ alert('🔒 Normis solo puede ver, no puede eliminar'); return; }
+  if(confirm('¿Eliminar este pedido?')){pedidos.splice(i,1);guardar();}
+}
+function toggle(i,campo){
+  if(campo==='pagado' && !puedeModificarAbonos()){ alert('🔒 Normis no puede marcar Pagado, solo ver'); mostrar(); return; }
+  if((campo==='listo'||campo==='entregado') && !puedeModificarReporte()){ alert('🔒 Gaby no puede marcar Listo / Entregado, solo ver'); mostrar(); return; }
+  pedidos[i][campo]=!pedidos[i][campo];guardar();
+}
+function sumarAbono(i){
+  if(!puedeModificarAbonos()){ alert('🔒 Normis no puede sumar abono, solo ver'); return; }
+  let inp = document.getElementById('abono-mas-'+i);
+  let extra = parseFloat(inp.value||0);
+  if(!extra || extra<=0){alert('Escribe cuánto abono vas a sumar');return;}
+  pedidos[i].ab += extra;
+  pedidos[i].resta = pedidos[i].total - pedidos[i].ab;
+  if(pedidos[i].resta<=0){pedidos[i].resta=0; pedidos[i].pagado=true;}
+  guardar();
+  alert('Abono sumado ✅ Ahora lleva $'+pedidos[i].ab+' de $'+pedidos[i].total);
+}
 function descargarImagen(i){
   let x=pedidos[i];
   let cv=document.createElement('canvas'); cv.width=700; cv.height=820;
@@ -189,28 +256,46 @@ function mostrar(){
   let h='';let totG=0;
   pedidos.forEach((x,i)=>{
     totG+=x.total;
+    let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
+    let abonoHTML = '';
+    if(puedeModificarAbonos()){
+      abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i})">+ Sumar Abono</button>
+      <label class="check-box ${x.pagado?'on-pagado':''}" style="margin-top:8px"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Marcar como Pagado</label></div>`;
+    } else {
+      abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver el abono. No puedes sumar.</p>
+      <label class="check-box disabled ${x.pagado?'on-pagado':''}" style="margin-top:8px"><input type="checkbox" disabled ${x.pagado?'checked':''}> ${x.pagado?'✓ Pagado':'○ No Pagado'} (solo ver)</label></div>`;
+    }
     h+=`<div class="pedido"><b>${x.c}</b> <span style="color:#666">- ${x.depto} | ${x.cant} pzs | Talla ${x.talla} | ${x.tela} | ${x.color}</span><br>
     <span class="small">Precio: $${x.pr} | Abono: $${x.ab} | Resta: $${x.resta} | <b>Total: $${x.total}</b> | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
-    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':'<span class="badge badge-no">○ No Entregado</span>'}<br>
+    <div class="progress"><div style="width:${pct}%"></div></div>
+    <small>${pct}% pagado</small><br>
+    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.entregado?'<span class="badge badge-entregado">✓ Entregado</span>':'<span class="badge badge-no">○ No Entregado</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':''}<br>
+    ${abonoHTML}
     <button class="img-btn" onclick="descargarImagen(${i})">⬇ Descargar imagen</button>
-    <button class="del" onclick="eliminar(${i})">🗑 Eliminar</button></div>`;
+    ${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i})">🗑 Eliminar</button>`:''}</div>`;
   });
   if(!pedidos.length) h='<p style="color:#888">Aún no hay pedidos</p>';
   document.getElementById('lista').innerHTML=h;
   document.getElementById('totalG').innerText='Total general: $'+totG;
   let hr='';
+  let puedeReporte = puedeModificarReporte();
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto} - ${x.cant} pzs - Talla ${x.talla} - Por: ${x.por||'--'}</div>
-    <div class="check-row">
-    <label class="check-box ${x.pagado?'on-pagado':''}"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Pagado</label>
+    hr+=`<div class="pedido"><div class="nombre-cliente">${x.c}</div><div class="small">${x.depto}</div>
+    ${puedeReporte ? `<div class="check-row">
+    <label class="check-box ${x.listo?'on-listo':''}"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>
     <label class="check-box ${x.entregado?'on-entregado':''}"><input type="checkbox" ${x.entregado?'checked':''} onchange="toggle(${i},'entregado')"> Entregado</label>
-    </div></div>`;
+    </div>` : `<div class="check-row">
+    <label class="check-box disabled ${x.listo?'on-listo':''}"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ No Listo'} (solo ver)</label>
+    <label class="check-box disabled ${x.entregado?'on-entregado':''}"><input type="checkbox" disabled ${x.entregado?'checked':''}> ${x.entregado?'✓ Entregado':'○ No Entregado'} (solo ver)</label>
+    </div>`}
+    </div>`;
   });
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML=hr;
   document.getElementById('r-total').innerText=pedidos.length;
   document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
   document.getElementById('r-entregado').innerText=pedidos.filter(x=>x.entregado).length;
+  document.getElementById('r-listo').innerText=pedidos.filter(x=>x.listo).length;
 }
 mostrarApp();
 </script>
