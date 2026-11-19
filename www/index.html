@@ -25,20 +25,21 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
 .del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
 .total{font-size:18px;font-weight:800;text-align:right}
-.check-row{display:flex;gap:10px;margin-top:10px}
-.check-box{flex:1;display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:12px;font-size:14px;font-weight:700}
+.check-box{display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:10px;font-size:14px;font-weight:700;justify-content:center}
 .check-box input{width:22px;height:22px;margin:0;accent-color:#111}
 .check-box.disabled{opacity:.6;background:#eee}
-.check-box.on-pagado{background:#d9f7d9}
 .check-box.on-listo{background:#fff3cd}
 .resumen{display:flex;gap:8px;text-align:center}
 .resumen div{flex:1;background:#fff;border-radius:12px;padding:10px}
 .resumen b{font-size:20px;display:block}
 .nombre-cliente{font-size:19px;font-weight:800}
-.opt-row{display:flex;gap:6px;margin:4px 0 8px;flex-wrap:wrap}
-.opt{flex:1;padding:8px 4px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:700;cursor:pointer;background:#fff;min-width:52px;font-size:13px}
-.opt.sel{background:#111;color:#fff}
-.opt small{display:block;font-weight:400;font-size:11px;margin-top:1px}
+.opt-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 8px}
+.opt-row.cant{grid-template-columns:repeat(5,1fr)}
+.opt-row.talla{grid-template-columns:repeat(4,1fr)}
+.opt-row.color{grid-template-columns:repeat(3,1fr)}
+.opt{padding:9px 4px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:700;cursor:pointer;background:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;min-height:38px}
+.opt.sel{background:#111;color:#fff;border-color:#111}
+.opt small{display:block;font-weight:400;font-size:11px;margin-left:3px}
 .calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0}
 .calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
 .calc b{font-size:17px}
@@ -59,11 +60,13 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 .pedido-mini .resta.ok{color:#0a6b0a}
 .detalle{display:none;background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
 .detalle.show{display:block}
-.reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.reporte-item .info{flex:1}
 .reporte-item .info b{font-size:17px;display:block}
-.reporte-item .info span{font-size:13px;color:#666}
-.talla-grupo{margin:6px 0;padding:8px;background:#f9f9f9;border-radius:10px}
-.talla-grupo label{margin:0;font-size:12px}
+.chaleco-grupo{margin:8px 0;padding:10px;background:#fff;border:1px solid #eee;border-radius:12px}
+.chaleco-grupo h4{margin:0 0 6px;font-size:15px}
+.carpeta{background:#eef6ff;border-radius:12px;padding:12px;margin-top:12px;cursor:pointer}
+.carpeta b{font-size:16px}
 </style>
 </head>
 <body>
@@ -101,20 +104,20 @@ button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color
 <label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
 <label>Departamento</label>
 <div class="opt-row" id="deptos"></div>
-<label>Cantidad</label>
-<select id="cantidad" onchange="cambioCantidad()"><option value="">Elige 1 al 5</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
-<label>Talla - Elige una por cada prenda</label><div id="tallas-container"></div>
-<label>Tela</label><div class="opt-row" id="telas"></div>
-<label>Color</label><div class="opt-row" id="colores"></div>
-<label>Abono</label><input id="abono" type="number" placeholder="$" oninput="calc()">
-<div class="calc"><div><span>Total:</span><b id="txt-total">$0</b></div><div><span>Abono:</span><span id="txt-abono">$0</span></div><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Precio por prenda:</span><span id="txt-detalle-precio">-</span></div></div>
+<label>Cantidad - Chalecos</label>
+<div class="opt-row cant" id="cantidades"></div>
+<div id="chalecos-container"></div>
+<label>Abono (Opcional - puedes dejarlo en $0)</label><input id="abono" type="number" placeholder="$ 0 - Opcional" oninput="calc()">
+<div class="calc"><div><span>Total:</span><b id="txt-total">$0</b></div><div><span>Abono:</span><span id="txt-abono">$0</span></div><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Detalle:</span><span id="txt-detalle-precio" style="text-align:right">-</span></div></div>
 <button onclick="agregar()">+ Agregar Pedido</button>
 </div>
 </div>
 
 <div id="sec-guardados" style="display:none">
 <button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div><div class="total" id="totalG"></div></div>
+<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div><div class="total" id="totalG"></div>
+<div id="carpeta-archivados"></div><div id="lista-archivados" style="display:none"></div>
+</div>
 </div>
 
 <div id="sec-reporte" style="display:none">
@@ -130,14 +133,8 @@ let USUARIOS = {"Norbert":"Norbert","Gaby":"Gaby","Normis":"Normis"};
 let usuarioActual = localStorage.getItem('usuario_gaby') || '';
 let PRECIOS_TALLA = {"XCH":220,"CH":240,"M":260,"G":280,"XL":300,"XL1":320,"XL2":340};
 
-function puedeModificarAbonos(){
-  if(usuarioActual==='Normis') return false;
-  return true;
-}
-function puedeModificarReporte(){
-  if(usuarioActual==='Gaby') return false;
-  return true;
-}
+function puedeModificarAbonos(){ if(usuarioActual==='Normis') return false; return true; }
+function puedeModificarReporte(){ if(usuarioActual==='Gaby') return false; return true; }
 
 function entrar(){
   let c = document.getElementById('clave').value.trim();
@@ -146,23 +143,16 @@ function entrar(){
     localStorage.setItem('usuario_gaby', usuarioActual);
     document.getElementById('error-login').style.display='none';
     mostrarApp();
-  } else {
-    document.getElementById('error-login').style.display='block';
-  }
+  } else { document.getElementById('error-login').style.display='block'; }
 }
 function salir(){
-  localStorage.removeItem('usuario_gaby');
-  usuarioActual='';
+  localStorage.removeItem('usuario_gaby'); usuarioActual='';
   document.getElementById('login').style.display='block';
   document.getElementById('app').style.display='none';
   document.getElementById('clave').value='';
 }
 function mostrarApp(){
-  if(!usuarioActual){
-    document.getElementById('login').style.display='block';
-    document.getElementById('app').style.display='none';
-    return;
-  }
+  if(!usuarioActual){ document.getElementById('login').style.display='block'; document.getElementById('app').style.display='none'; return; }
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('txt-usuario').innerText = 'Hola, ' + usuarioActual + ' 👋';
@@ -171,61 +161,86 @@ function mostrarApp(){
   if(usuarioActual==='Normis') txt='Eres Normis: Puedes ver Pedidos Guardados, pero no puedes abonar. Sí puedes marcar Listo.';
   if(usuarioActual==='Norbert') txt='Eres Norbert: Puedes modificar todo';
   document.getElementById('txt-permiso').innerText=txt;
-  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Toca el nombre para ver detalle y abonar.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono ni marcar Pagado.</div>';
+  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Toca el nombre para ver detalle y abonar. Pagado se marca solo al 100%.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono.</div>';
   document.getElementById('aviso-reporte').innerHTML = puedeModificarReporte() ? '<span style="color:#666;font-size:13px">Marca Listo cuando ya esté terminado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo.</div>';
   mostrar();
 }
 document.getElementById('clave').addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
 
 let pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]');
-let tallasSel = []; // una talla por cada cantidad
-let telaSel='', deptoSel='', colorSel='';
+// Normalizar pedidos viejos a nueva estructura
+pedidos = pedidos.map(p=>{
+  if(!p.chalecos){
+    let tallasArr = p.tallas ? p.tallas : (p.talla ? [p.talla] : []);
+    let cant = p.cant || tallasArr.length || 1;
+    let chalecos = [];
+    for(let i=0;i<cant;i++){ chalecos.push({tallas: tallasArr[i]?[tallasArr[i]]:[], telas: p.tela?[p.tela]:[], colores: p.color?[p.color]:[]}); }
+    p.chalecos = chalecos;
+  }
+  // Pagado ahora es automatico
+  p.pagado = (p.resta===0 && p.total>0);
+  return p;
+});
+
+let cantSel = 0;
+let deptoSel='';
+let chalecosSel = []; // [{tallas:[], telas:[], colores:[]}]
 let abierto = -1;
+let carpetaAbierta = false;
 
 function renderOpts(){
   let deptos=['Aeromexico','Cargo','Connect','Marina','Remolque','Servicio'];
-  document.getElementById('deptos').innerHTML=deptos.map(t=>`<div class="opt ${deptoSel===t?'sel':''}" onclick="deptoSel='${t}';renderOpts()">● ${t}</div>`).join('');
-  let telas=['Gabardina','Lisa','Puntitos','Red'];
-  document.getElementById('telas').innerHTML=telas.map(t=>`<div class="opt ${telaSel===t?'sel':''}" onclick="telaSel='${t}';renderOpts()">${t}</div>`).join('');
-  let colores=['Amarillo','A. Marino','A. Rey','Gris','Naranja','Negra'];
-  document.getElementById('colores').innerHTML=colores.map(t=>`<div class="opt ${colorSel===t?'sel':''}" onclick="colorSel='${t}';renderOpts()">● ${t}</div>`).join('');
-  renderTallas();
+  document.getElementById('deptos').innerHTML=deptos.map(t=>`<div class="opt ${deptoSel===t?'sel':''}" onclick="deptoSel='${t}';renderOpts()">${t}</div>`).join('');
+  let nums=[1,2,3,4,5];
+  document.getElementById('cantidades').innerHTML=nums.map(n=>`<div class="opt ${cantSel===n?'sel':''}" onclick="elegirCant(${n})">${n}</div>`).join('');
+  renderChalecos();
 }
-function cambioCantidad(){
-  let cant = parseInt(document.getElementById('cantidad').value||0);
-  // Ajustar array de tallas al tamaño de cantidad, conservar las ya elegidas
-  let nuevo = [];
-  for(let i=0;i<cant;i++){ nuevo.push(tallasSel[i]||''); }
-  tallasSel = nuevo;
-  renderTallas(); calc();
+function elegirCant(n){
+  cantSel=n;
+  let nuevo=[];
+  for(let i=0;i<n;i++){ nuevo.push(chalecosSel[i] || {tallas:[], telas:[], colores:[]}); }
+  chalecosSel=nuevo;
+  renderOpts(); calc();
 }
-function renderTallas(){
-  let cant = parseInt(document.getElementById('cantidad').value||0);
-  let cont = document.getElementById('tallas-container');
-  if(!cant){ cont.innerHTML='<p style="color:#888;font-size:13px">Primero elige la cantidad</p>'; return; }
+function toggleMulti(chalecoIdx, tipo, valor){
+  let arr = chalecosSel[chalecoIdx][tipo];
+  let idx = arr.indexOf(valor);
+  if(idx>=0){ arr.splice(idx,1); }
+  else {
+    if(arr.length>=2){ alert('Solo puedes elegir hasta 2 opciones'); return; }
+    arr.push(valor);
+  }
+  renderChalecos(); calc();
+}
+function renderChalecos(){
+  let cont = document.getElementById('chalecos-container');
+  if(!cantSel){ cont.innerHTML='<p style="color:#888;font-size:13px">Primero elige la cantidad de chalecos</p>'; return; }
   let tallas=['XCH','CH','M','G','XL','XL1','XL2'];
+  let telas=['Gabardina','Lisa','Puntitos','Red'];
+  let colores=['Amarillo','A. Marino','A. Rey','Gris','Naranja','Negra'];
   let html='';
-  for(let i=0;i<cant;i++){
-    html += `<div class="talla-grupo"><label>Prenda ${i+1} - Talla</label><div class="opt-row">` + tallas.map(t=>`<div class="opt ${tallasSel[i]===t?'sel':''}" onclick="elegirTallaPos(${i},'${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('') + `</div></div>`;
+  for(let i=0;i<cantSel;i++){
+    let ch = chalecosSel[i] || {tallas:[], telas:[], colores:[]};
+    html+=`<div class="chaleco-grupo"><h4>🦺 Chaleco ${i+1}</h4>
+    <label style="margin:0">Talla - puedes elegir hasta 2</label><div class="opt-row talla">`+tallas.map(t=>`<div class="opt ${ch.tallas.includes(t)?'sel':''}" onclick="toggleMulti(${i},'tallas','${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('')+`</div>
+    <label style="margin:0">Tela - puedes elegir hasta 2</label><div class="opt-row">`+telas.map(t=>`<div class="opt ${ch.telas.includes(t)?'sel':''}" onclick="toggleMulti(${i},'telas','${t}')">${t}</div>`).join('')+`</div>
+    <label style="margin:0">Color - puedes elegir hasta 2</label><div class="opt-row color">`+colores.map(t=>`<div class="opt ${ch.colores.includes(t)?'sel':''}" onclick="toggleMulti(${i},'colores','${t}')">${t}</div>`).join('')+`</div>
+    </div>`;
   }
   cont.innerHTML=html;
 }
-function elegirTallaPos(pos,t){
-  tallasSel[pos]=t;
-  renderTallas(); calc();
-}
 renderOpts();
 function calc(){
-  let cant = parseInt(document.getElementById('cantidad').value||0);
   let ab=parseFloat(document.getElementById('abono').value||0);
-  let total=0;
-  let detalle=[];
-  tallasSel.forEach(t=>{ if(t){ total+=PRECIOS_TALLA[t]; detalle.push(t+' $'+PRECIOS_TALLA[t]); } });
+  let total=0; let detalle=[];
+  chalecosSel.forEach((ch,idx)=>{
+    ch.tallas.forEach(t=>{ total+=PRECIOS_TALLA[t]; detalle.push('Chaleco '+(idx+1)+' '+t+' $'+PRECIOS_TALLA[t]); });
+  });
   let resta=total-ab; if(resta<0) resta=0;
   document.getElementById('txt-total').innerText='$'+total;
   document.getElementById('txt-abono').innerText='$'+ab;
   document.getElementById('txt-resta').innerText='$'+resta;
-  document.getElementById('txt-detalle-precio').innerText= detalle.join(' + ') || '-';
+  document.getElementById('txt-detalle-precio').innerText= detalle.join(' | ') || '-';
   return {total,resta};
 }
 function guardar(){localStorage.setItem('pedidos_gaby',JSON.stringify(pedidos));mostrar();}
@@ -238,15 +253,20 @@ function ir(v){
 }
 function agregar(){
   let c=document.getElementById('nombre').value.trim();
-  let cant=parseInt(document.getElementById('cantidad').value||0);
   let ab=parseFloat(document.getElementById('abono').value||0);
-  if(!c||!deptoSel||!cant||!telaSel||!colorSel){alert('Falta llenar: Nombre, Departamento, Cantidad, Tela y Color');return;}
-  if(tallasSel.length!==cant || tallasSel.includes('') || tallasSel.includes(undefined)){alert('Elige una talla para cada prenda. Si son '+cant+' prendas, debes elegir '+cant+' tallas');return;}
+  if(!c||!deptoSel||!cantSel){alert('Falta: Nombre, Departamento y Cantidad');return;}
+  // Validar al menos 1 talla por chaleco
+  for(let i=0;i<chalecosSel.length;i++){
+    if(!chalecosSel[i].tallas.length){ alert('En Chaleco '+(i+1)+' elige al menos 1 talla'); return; }
+  }
   let {total,resta}=calc();
-  let pagado = ab >= total;
-  let tallasTxt = tallasSel.join(', ');
-  pedidos.unshift({c,depto:deptoSel,cant,tallas:[...tallasSel],talla:tallasTxt,tela:telaSel,color:colorSel,pr: total/cant,ab,total,resta,pagado,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
-  document.getElementById('nombre').value='';document.getElementById('cantidad').value='';document.getElementById('abono').value='';tallasSel=[];telaSel='';deptoSel='';colorSel='';renderOpts();calc();
+  let pagado = (resta===0 && total>0);
+  // Texto resumen para compatibilidad
+  let tallasTxt = chalecosSel.map(ch=>ch.tallas.join('+')).join(', ');
+  let telasTxt = chalecosSel.map(ch=>ch.telas.join('+')).join(', ');
+  let coloresTxt = chalecosSel.map(ch=>ch.colores.join('+')).join(', ');
+  pedidos.unshift({c,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:new Date().toLocaleString(),por:usuarioActual||'Sin nombre'});
+  document.getElementById('nombre').value='';document.getElementById('abono').value='';cantSel=0;chalecosSel=[];deptoSel='';renderOpts();calc();
   guardar(); alert('Pedido guardado ✅'); ir('guardados');
 }
 function eliminar(i){
@@ -254,7 +274,6 @@ function eliminar(i){
   if(confirm('¿Eliminar este pedido?')){pedidos.splice(i,1);guardar();}
 }
 function toggle(i,campo){
-  if(campo==='pagado' && !puedeModificarAbonos()){ alert('🔒 Normis no puede marcar Pagado, solo ver'); mostrar(); return; }
   if(campo==='listo' && !puedeModificarReporte()){ alert('🔒 Gaby no puede marcar Listo, solo ver'); mostrar(); return; }
   pedidos[i][campo]=!pedidos[i][campo];guardar();
 }
@@ -266,63 +285,85 @@ function sumarAbono(i){
   pedidos[i].ab += extra;
   pedidos[i].resta = pedidos[i].total - pedidos[i].ab;
   if(pedidos[i].resta<=0){pedidos[i].resta=0; pedidos[i].pagado=true;}
+  else { pedidos[i].pagado=false; }
   guardar();
   alert('Abono sumado ✅ Ahora lleva $'+pedidos[i].ab+' de $'+pedidos[i].total);
 }
-function toggleDetalle(i){
-  abierto = (abierto===i ? -1 : i);
-  mostrar();
-}
+function toggleDetalle(i){ abierto = (abierto===i ? -1 : i); mostrar(); }
+function toggleCarpeta(){ carpetaAbierta=!carpetaAbierta; mostrar(); }
 function descargarImagen(i){
   let x=pedidos[i];
-  let cv=document.createElement('canvas'); cv.width=700; cv.height=820;
+  let cv=document.createElement('canvas'); cv.width=700; cv.height=900;
   let ctx=cv.getContext('2d');
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,700,820);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,700,900);
   ctx.fillStyle='#111'; ctx.fillRect(0,0,700,130);
   ctx.fillStyle='#fff'; ctx.font='900 42px sans-serif'; ctx.textAlign='center';
   ctx.fillText('🐾 GABY Y NORMIS',350,65); ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
-  ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 28px sans-serif';
+  ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 26px sans-serif';
   let y=190;
-  let tallasTxt = x.tallas ? x.tallas.join(', ') : (x.talla||'');
-  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant],['Tallas:',tallasTxt],['Tela:',x.tela],['Color:',x.color],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
+  let lines=[['Cliente:',x.c],['Departamento:',x.depto],['Cantidad:',x.cant+' Chalecos'],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
   lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
-  ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,790);
+  if(x.chalecos){
+    x.chalecos.forEach((ch,idx)=>{
+      y+=10; ctx.font='700 26px sans-serif'; ctx.fillText('Chaleco '+(idx+1)+':',40,y); y+=36;
+      ctx.font='400 22px sans-serif'; ctx.fillText('Talla: '+ch.tallas.join(' + '),60,y); y+=32;
+      ctx.fillText('Tela: '+ch.telas.join(' + '),60,y); y+=32;
+      ctx.fillText('Color: '+ch.colores.join(' + '),60,y); y+=10;
+    });
+  }
+  ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,870);
   let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
 }
+function htmlPedidoDetalle(x,i,esArchivado){
+  let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
+  let abonoHTML = '';
+  if(puedeModificarAbonos()){
+    abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono (Opcional)</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i});event.stopPropagation()">+ Sumar Abono</button></div>`;
+  } else {
+    abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver. No puedes sumar abono.</p></div>`;
+  }
+  let chalecosTxt = '';
+  if(x.chalecos){
+    chalecosTxt = x.chalecos.map((ch,idx)=>`Chaleco ${idx+1}: Talla ${ch.tallas.join(' + ')||'-'} | Tela ${ch.telas.join(' + ')||'-'} | Color ${ch.colores.join(' + ')||'-'}`).join('<br>');
+  } else {
+    chalecosTxt = `Tallas: ${x.talla||''} | Tela: ${x.tela||''} | Color: ${x.color||''}`;
+  }
+  let isOpen = abierto===i;
+  return `<div>
+  <div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} Chaleco(s) • ${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div>
+  <div class="detalle ${isOpen?'show':''}">
+    <span class="small">${chalecosTxt}<br>${x.fecha||''} | Por: ${x.por||'--'}</span><br>
+    <span class="small">Total: $${x.total} | Abono: $${x.ab} | Resta: $${x.resta}</span><br>
+    <div class="progress"><div style="width:${pct}%"></div></div><small>${pct}% pagado</small><br>
+    ${x.pagado?'<span class="badge badge-pagado">✓ Pagado - 100%</span>':'<span class="badge badge-no">○ Falta $'+x.resta+'</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}<br>
+    ${abonoHTML}
+    <button class="img-btn" onclick="descargarImagen(${i});event.stopPropagation()">⬇ Descargar imagen</button>
+    ${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i});event.stopPropagation()">🗑 Eliminar</button>`:''}
+  </div></div>`;
+}
 function mostrar(){
-  let h='';let totG=0; let faltaTotal=0;
-  pedidos.forEach((x,i)=>{
-    totG+=x.total; faltaTotal+=x.resta;
-    let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
-    let tallasTxt = x.tallas ? x.tallas.join(', ') : (x.talla||'');
-    let abonoHTML = '';
-    if(puedeModificarAbonos()){
-      abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i});event.stopPropagation()">+ Sumar Abono</button>
-      <label class="check-box ${x.pagado?'on-pagado':''}" style="margin-top:8px"><input type="checkbox" ${x.pagado?'checked':''} onchange="toggle(${i},'pagado')"> Marcar como Pagado</label></div>`;
-    } else {
-      abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver. No puedes sumar abono.</p></div>`;
-    }
-    let isOpen = abierto===i;
-    h+=`<div>
-    <div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} prenda(s) • ${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div>
-    <div class="detalle ${isOpen?'show':''}">
-      <span class="small">Tallas: ${tallasTxt} | Tela: ${x.tela} | Color: ${x.color} | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>
-      <span class="small">Total: $${x.total} | Abono: $${x.ab} | Resta: $${x.resta}</span><br>
-      <div class="progress"><div style="width:${pct}%"></div></div><small>${pct}% pagado</small><br>
-      ${x.pagado?'<span class="badge badge-pagado">✓ Pagado</span>':'<span class="badge badge-no">○ No Pagado</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}<br>
-      ${abonoHTML}
-      <button class="img-btn" onclick="descargarImagen(${i});event.stopPropagation()">⬇ Descargar imagen</button>
-      ${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i});event.stopPropagation()">🗑 Eliminar</button>`:''}
-    </div></div>`;
-  });
-  if(!pedidos.length) h='<p style="color:#888">Aún no hay pedidos</p>';
+  let activos = pedidos.map((p,idx)=>({p,idx})).filter(o=>!(o.p.listo && o.p.pagado));
+  let archivados = pedidos.map((p,idx)=>({p,idx})).filter(o=>(o.p.listo && o.p.pagado));
+  let totG=0; let faltaTotal=0;
+  pedidos.forEach(x=>{ totG+=x.total; faltaTotal+=x.resta; });
+  let h='';
+  activos.forEach(o=>{ h+=htmlPedidoDetalle(o.p,o.idx,false); });
+  if(!activos.length) h='<p style="color:#888">No hay pedidos activos. Los completados están en Archivados abajo.</p>';
   document.getElementById('lista').innerHTML=h;
   document.getElementById('totalG').innerText='Total general: $'+totG+' | Falta cobrar: $'+faltaTotal;
+  document.getElementById('carpeta-archivados').innerHTML = `<div class="carpeta" onclick="toggleCarpeta()"><b>📁 Archivados - Completados (Listo + Pagado) (${archivados.length})</b><br><span style="font-size:13px;color:#555">${carpetaAbierta?'▼ Cerrar carpeta':'▶ Toca para ver los completados'}</span></div>`;
+  let ha='';
+  archivados.forEach(o=>{ ha+=htmlPedidoDetalle(o.p,o.idx,true); });
+  if(!archivados.length) ha='<p style="color:#888">Aún no hay archivados.</p>';
+  document.getElementById('lista-archivados').innerHTML=ha;
+  document.getElementById('lista-archivados').style.display = carpetaAbierta ? 'block' : 'none';
+
   let hr='';
   let puedeReporte = puedeModificarReporte();
   pedidos.forEach((x,i)=>{
-    hr+=`<div class="reporte-item"><div class="info"><b>${x.c}</b><span>${x.depto} • ${x.cant} prenda(s) • Tallas: ${x.tallas ? x.tallas.join(', ') : (x.talla||'')}</span><br>${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}</div>
-    ${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 110px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 110px"><input type="checkbox" disabled ${x.listo?'checked':''}> Solo ver</label>`}
+    hr+=`<div class="reporte-item"><div class="info"><b>${x.c}</b><span style="font-size:13px;color:#666">${x.depto}</span></div>
+    <span class="badge ${x.pagado?'badge-pagado':'badge-no'}" style="white-space:nowrap">${x.pagado?'✓ Pagado':'○ Falta $'+x.resta}</span>
+    ${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 95px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 95px"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ Listo'}</label>`}
     </div>`;
   });
   if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
