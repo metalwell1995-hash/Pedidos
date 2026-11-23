@@ -30,7 +30,8 @@ jobs:
         run: |
           npx cap add android
           npx cap sync
-
+      - name: Agregar permiso de micrófono
+        run: python3 fix-permiso.py
       - name: Poner icono de huella
         run: |
           rm -rf android/app/src/main/res/mipmap-anydpi-v26
