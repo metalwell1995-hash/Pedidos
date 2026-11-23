@@ -145,13 +145,14 @@ audio{width:100%;margin-top:8px;height:36px}
 
 <div class="nota-voz-box">
 <div class="titulo"><span>🎤 Nota de voz <small style="font-weight:400;color:#888">(Opcional)</small></span><span id="txt-tiempo-voz" style="font-size:12px;color:#cc0000;font-weight:800"></span></div>
-<p style="font-size:12px;color:#888;margin:4px 0 0">Deja un mensaje corto si hay algo especial del pedido</p>
+<p style="font-size:12px;color:#888;margin:4px 0 0">Toca Grabar, graba en la grabadora de tu celular y se guarda con el pedido</p>
 <div class="nota-voz-btns">
-<button id="btn-grabar" class="btn-grabar" onclick="toggleGrabacion()">● Grabar</button>
+<button id="btn-grabar" class="btn-grabar" onclick="abrirGrabadorNativo()">● Grabar</button>
 <button id="btn-borrar-voz" class="btn-borrar" onclick="borrarNotaVoz()" style="display:none">🗑 Borrar</button>
 </div>
+<input id="input-grabar-nativo" type="file" accept="audio/*" capture style="display:none" onchange="archivoVozElegido(this)">
 <div id="audio-preview"></div>
-<p id="aviso-permiso-voz" style="font-size:12px;color:#cc0000;display:none;margin:6px 0 0">⚠️ Micrófono bloqueado. Ve a Ajustes del celular → App Gaby y Normis → Permisos → Micrófono → Permitir.</p>
+<p id="aviso-permiso-voz" style="font-size:12px;color:#cc0000;display:none;margin:6px 0 0"></p>
 </div>
 
 <label>Abono (Opcional - puedes dejarlo en $0)</label><input id="abono" type="number" placeholder="$ 0 - Opcional" oninput="calc()">
@@ -196,10 +197,8 @@ audio{width:100%;margin-top:8px;height:36px}
 </div>
 
 <script>
-// --- LOGIN ARREGLADO: ya no importa mayúscula / minúscula ---
 let USUARIOS_MAP = {"norbert":"Norbert","gaby":"Gaby","normis":"Normis"};
 let usuarioActual = localStorage.getItem('usuario_gaby') || '';
-// Si quedó guardado algo raro, lo limpiamos
 if(usuarioActual && !USUARIOS_MAP[usuarioActual.toLowerCase()]){
   usuarioActual = '';
   localStorage.removeItem('usuario_gaby');
@@ -287,67 +286,42 @@ let abierto = -1;
 let carpetaAbierta = false;
 let copiarIdx = -1;
 
-// --- SOLO GRABAR AUDIO ---
-let mediaRecorder = null;
-let chunksVoz = [];
-let grabando = false;
+// --- GRABAR CON GRABADORA NATIVA DEL CELULAR (SI JALA EN APK) ---
 let notaVozActual = '';
-let timerVoz = null;
-let segVoz = 0;
 
 function actualizarVistaVoz(){
   let btn = document.getElementById('btn-grabar');
   let btnBorrar = document.getElementById('btn-borrar-voz');
   let preview = document.getElementById('audio-preview');
-  if(grabando){
-    btn.innerText = '■ Parar';
-    btn.classList.add('grabando');
-  } else {
-    btn.innerText = notaVozActual ? '↻ Grabar otra vez' : '● Grabar';
-    btn.classList.remove('grabando');
-  }
+  btn.innerText = notaVozActual ? '↻ Grabar otra vez' : '● Grabar';
+  btn.classList.remove('grabando');
   if(notaVozActual){
     btnBorrar.style.display='block';
     preview.innerHTML = '<audio controls src="'+notaVozActual+'"></audio><p style="font-size:12px;color:#0a6b0a;margin:4px 0 0">✅ Nota guardada - se guardará con el pedido</p>';
   } else {
     btnBorrar.style.display='none';
-    if(!grabando) preview.innerHTML='';
+    preview.innerHTML='';
   }
 }
-async function toggleGrabacion(){
-  if(grabando){ mediaRecorder.stop(); return; }
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    document.getElementById('aviso-permiso-voz').style.display='block';
-    return;
-  }
-  try{
-    let stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    document.getElementById('aviso-permiso-voz').style.display='none';
-    mediaRecorder = new MediaRecorder(stream);
-    chunksVoz = [];
-    mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) chunksVoz.push(e.data); };
-    mediaRecorder.onstop = ()=>{
-      stream.getTracks().forEach(t=>t.stop());
-      let blob = new Blob(chunksVoz, {type:'audio/webm'});
-      let reader = new FileReader();
-      reader.onload = ()=>{ notaVozActual = reader.result; actualizarVistaVoz(); };
-      reader.readAsDataURL(blob);
-      clearInterval(timerVoz);
-      document.getElementById('txt-tiempo-voz').innerText='';
-      grabando=false;
-      actualizarVistaVoz();
-    };
-    mediaRecorder.start();
-    grabando=true;
-    segVoz=0;
-    document.getElementById('txt-tiempo-voz').innerText='● 0s';
-    timerVoz = setInterval(()=>{ segVoz++; document.getElementById('txt-tiempo-voz').innerText='● '+segVoz+'s'; },1000);
+function abrirGrabadorNativo(){
+  document.getElementById('aviso-permiso-voz').style.display='none';
+  document.getElementById('input-grabar-nativo').click();
+}
+function archivoVozElegido(input){
+  let file = input.files && input.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = ()=>{
+    notaVozActual = reader.result;
     actualizarVistaVoz();
-  }catch(err){
-    document.getElementById('aviso-permiso-voz').style.display='block';
-  }
+  };
+  reader.readAsDataURL(file);
+  // limpiar para que puedas grabar otra vez el mismo archivo
+  input.value = '';
 }
 function borrarNotaVoz(){ notaVozActual=''; actualizarVistaVoz(); }
+// Para que no se rompa si algo viejo llama a toggleGrabacion
+function toggleGrabacion(){ abrirGrabadorNativo(); }
 
 function renderOpts(){
   let deptos=['Aeromexico','Cargo','Connect','Marina','Remolque','Servicio'];
