@@ -1,579 +1,66 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gaby Y Normis</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui;background:#f5f5f5}
-header{background:#111;color:#fff;padding:16px;text-align:center;font-size:22px;font-weight:900}
-header span{font-size:28px}
-.wrap{padding:14px;max-width:600px;margin:0 auto}
-.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-label{font-size:13px;font-weight:700;color:#333;margin-top:8px;display:block}
-input,select{width:100%;padding:12px;margin:4px 0 8px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#fff}
-button{width:100%;padding:13px;border:0;border-radius:10px;background:#111;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-.btn-menu{padding:24px;font-size:22px;margin-bottom:14px}
-.btn-menu small{display:block;font-size:14px;font-weight:400;color:#ddd;margin-top:4px}
-.btn-back{background:#eee;color:#333;margin-bottom:12px}
-.pedido{border-top:1px solid #eee;padding:12px 0}
-.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;margin:2px}
-.badge-pagado{background:#d9f7d9;color:#0a6b0a}
-.badge-listo{background:#fff3cd;color:#856404}
-.badge-no{background:#eee;color:#888}
-.img-btn{background:#0a4ab5!important;color:#fff!important;padding:8px 14px!important;font-size:14px!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0!important}
-.del{background:#f0f0f0!important;color:#cc0000!important;border:1px solid #e0e0e0!important;padding:6px 12px!important;font-size:13px!important;font-weight:600!important;border-radius:20px!important;width:auto!important;display:inline-block!important;margin:6px 0 6px 8px!important}
-.total{font-size:18px;font-weight:800;text-align:right}
-.check-box{display:flex;align-items:center;gap:8px;background:#f7f7f7;border-radius:10px;padding:10px;font-size:14px;font-weight:700;justify-content:center}
-.check-box input{width:22px;height:22px;margin:0;accent-color:#111}
-.check-box.disabled{opacity:.6;background:#eee}
-.check-box.on-listo{background:#fff3cd}
-.nombre-cliente{font-size:19px;font-weight:800}
-.opt-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 8px}
-.opt-row.cant{grid-template-columns:repeat(5,1fr)}
-.opt-row.talla{grid-template-columns:repeat(4,1fr)}
-.opt-row.color{grid-template-columns:repeat(3,1fr)}
-.opt{padding:9px 4px;border:1px solid #ddd;border-radius:8px;text-align:center;font-weight:700;cursor:pointer;background:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;min-height:38px}
-.opt.sel{background:#111;color:#fff;border-color:#111}
-.opt small{display:block;font-weight:400;font-size:11px;margin-left:3px}
-.calc{background:#f9f9f9;border-radius:10px;padding:10px;margin:6px 0}
-.calc div{display:flex;justify-content:space-between;font-size:15px;padding:3px 0}
-.calc b{font-size:17px}
-.small{font-size:13px;color:#666}
-.user-bar{background:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;border-bottom:1px solid #eee}
-.user-bar button{width:auto;padding:6px 12px;font-size:13px;background:#eee;color:#333;border-radius:20px}
-#login{max-width:400px;margin:60px auto;padding:20px;text-align:center}
-#login .card{padding:22px}
-.abono-box{background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
-.abono-box input{margin:4px 0}
-.btn-sumar{background:#0a6b0a;padding:10px;font-size:14px}
-.progress{background:#eee;border-radius:20px;height:10px;overflow:hidden;margin:6px 0}
-.progress div{background:#0a6b0a;height:100%}
-.aviso{font-size:13px;color:#888;text-align:center;background:#fff3cd;padding:8px;border-radius:8px;margin-bottom:10px}
-.pedido-mini{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07);cursor:pointer}
-.pedido-mini b{font-size:17px}
-.pedido-mini .resta{font-weight:800;font-size:16px;color:#cc0000}
-.pedido-mini .resta.ok{color:#0a6b0a}
-.detalle{display:none;background:#f9f9f9;border-radius:10px;padding:10px;margin-top:8px}
-.detalle.show{display:block}
-.reporte-item{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.reporte-item .info{flex:1}
-.reporte-item .info b{font-size:17px;display:block}
-.chaleco-grupo{margin:8px 0;padding:10px;background:#fff;border:1px solid #eee;border-radius:12px}
-.chaleco-grupo h4{margin:0 0 6px;font-size:15px}
-.carpeta{background:#eef6ff;border-radius:12px;padding:14px;margin-top:12px;cursor:pointer;text-align:center}
-.carpeta b{font-size:16px}
-.resumen-simple{background:#fff;border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.resumen-simple h3{margin:0 0 10px;font-size:16px;text-align:center}
-.resumen-fila{display:flex;justify-content:space-between;align-items:center;padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:15px}
-.resumen-fila:last-child{border-bottom:0}
-.resumen-fila b{font-size:17px}
-.resumen-fila.click{cursor:pointer;background:#f9f9f9;border-radius:8px}
-.resumen-fila.click:active{background:#eee}
-.completado-item{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.completado-item b{font-size:16px}
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:99;padding:16px}
-.modal-bg.show{display:flex}
-.modal{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:400px}
-.modal h3{margin:0 0 10px}
-.lista-simple-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)}
-.lista-simple-item b{font-size:16px}
-.lista-simple-item span{font-size:13px;color:#666}
-.nota-voz-box{background:#f9f9f9;border:1px dashed #ddd;border-radius:10px;padding:10px;margin:8px 0}
-.nota-voz-box .titulo{font-size:13px;font-weight:700;color:#555;display:flex;justify-content:space-between;align-items:center}
-.nota-voz-btns{display:flex;gap:6px;margin-top:8px}
-.nota-voz-btns button{padding:9px;font-size:13px;border-radius:20px}
-.btn-grabar{background:#cc0000!important}
-.btn-grabar.grabando{background:#ff0000!important;animation:parpadea 1s infinite}
-@keyframes parpadea{0%{opacity:1}50%{opacity:.6}100%{opacity:1}}
-.btn-borrar{background:#eee!important;color:#cc0000!important}
-audio{width:100%;margin-top:8px;height:36px}
-.nota-mini{font-size:12px;color:#666;background:#fff3cd;padding:4px 8px;border-radius:20px;display:inline-block;margin-top:4px}
-</style>
-</head>
-<body>
-
-<div id="login">
-  <div style="font-size:50px">🐾</div>
-  <h2 style="margin:5px 0">GABY Y NORMIS</h2>
-  <p style="color:#666;font-size:14px">Escribe tu clave de equipo para entrar</p>
-  <div class="card">
-    <label style="text-align:left">Tu clave</label>
-    <div style="display:flex;gap:6px;align-items:center">
-      <input id="clave" type="password" placeholder="Ej: Gaby" style="flex:1">
-      <button id="btn-ver" type="button" style="width:auto;padding:12px 14px;font-size:13px;background:#eee;color:#333">👁 Ver</button>
-    </div>
-    <button id="btn-entrar" type="button" onclick="let v=document.getElementById('clave').value.trim().toLowerCase();let m={gaby:'Gaby',normis:'Normis',norbert:'Norbert'};if(m[v]){try{localStorage.setItem('usuario_gaby',m[v])}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('txt-usuario').innerText='Hola, '+m[v];}else{document.getElementById('error-login').style.display='block'}">Entrar</button>
-    <p id="error-login" style="color:#cc0000;font-size:13px;display:none">Clave incorrecta, intenta de nuevo</p>
-    <button id="btn-borrar-sesion" type="button" style="background:none;color:#888;font-size:13px;font-weight:400;padding:8px">¿No te deja entrar? Toca aquí para borrar sesión</button>
-  </div>
-  <p style="color:#999;font-size:12px">Claves: Gaby / Normis / Norbert - puedes escribir con mayúscula o minúscula</p>
-</div>
-
-<div id="app" style="display:none">
-<header><span>🐾</span><br>GABY Y NORMIS</header>
-<div class="user-bar"><span id="txt-usuario">Hola</span><button onclick="salir()">Salir</button></div>
-<div class="wrap">
-
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>🐾 Pedidos Gaby</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#fff8f0;color:#222;padding:14px;padding-bottom:80px}
+h1,h2{color:#b4552d}input,select,textarea{width:100%;padding:12px;border:2px solid #f0c9a8;border-radius:12px;font-size:16px;margin:6px 0;background:#fff}
+button{border:0;border-radius:12px;padding:13px;font-size:16px;font-weight:800;cursor:pointer}
+.btn{width:100%;background:#e86a2c;color:#fff;margin:6px 0}.btn2{width:100%;background:#fff;color:#b4552d;border:2px solid #f0c9a8;margin:6px 0}
+.btn-menu{width:100%;background:#fff;text-align:left;padding:16px;border:2px solid #f0c9a8;margin:8px 0;font-size:18px}
+.card{background:#fff;border:2px solid #f0c9a8;border-radius:16px;padding:14px;margin:10px 0}
+.row{display:flex;gap:8px}.row>*{flex:1}.small{font-size:13px;color:#666}.total{font-size:22px;font-weight:900;color:#b4552d}
+.hidden{display:none!important}.tag{background:#ffe8d6;border-radius:20px;padding:4px 10px;font-size:12px;font-weight:800}
+</style></head><body>
+<div id="login"><h1>🐾 Pedidos Gaby</h1><p>Escribe tu clave para entrar</p><input id="clave" placeholder="Ej: Gaby"><div id="error-login" class="small" style="color:red;display:none">Clave no correcta. Prueba: Gaby, Normis, Norbert</div><button class="btn" onclick="entrar()">Entrar</button><p class="small">Claves: Gaby / Normis / Norbert</p></div>
+<div id="app" class="hidden">
+<div style="display:flex;justify-content:space-between;align-items:center"><b id="txt-usuario">Hola</b><button onclick="salir()" style="background:#eee;padding:8px 12px">Salir</button></div>
 <div id="menu">
-<div class="resumen-simple">
-<h3>📊 Resumen</h3>
-<div class="resumen-fila"><span>📦 Total pedidos</span><b id="r-total">0</b></div>
-<div class="resumen-fila click" onclick="ir('total')"><span>💰 Total general <small style="color:#888">▶ Toca para ver</small></span><b id="r-total-dinero">$0</b></div>
-<div class="resumen-fila click" onclick="ir('falta')"><span>🧾 Falta por cobrar <small style="color:#888">▶ Toca para ver</small></span><b id="r-resta" style="color:#cc0000">$0</b></div>
-<div class="resumen-fila"><span>✅ Pagados</span><b id="r-pagado" style="color:#0a6b0a">0</b></div>
-<div class="resumen-fila"><span>🦺 Listos</span><b id="r-listo" style="color:#856404">0</b></div>
+<h2>Menú Principal</h2>
+<button class="btn-menu" onclick="ir('pedidos')">📝 Hacer un pedido ➜</button>
+<button class="btn-menu" onclick="ir('guardados')">📦 Pedidos Guardados ➜</button>
+<button class="btn-menu" onclick="ir('reporte')">📊 Reporte / Abono ➜</button>
+<div class="card"><b>Resumen de hoy</b><div class="small" id="resumen-hoy">Sin pedidos hoy</div></div>
 </div>
-<button class="btn-menu" onclick="ir('pedidos')">📝 Hacer un pedido<small>Crear un pedido nuevo</small></button>
-<button class="btn-menu" onclick="ir('guardados')" style="background:#0a4ab5">📦 Pedidos Guardados<small>Ver lo que falta por pagar</small></button>
-<button class="btn-menu" onclick="ir('reporte')" style="background:#ff8c00">🚚 Reporte de entrega<small>Marcar Listo</small></button>
-<p id="txt-permiso" style="text-align:center;color:#888;font-size:13px;margin:8px 0 0"></p>
+<div id="sec-pedidos" class="hidden">
+<h2>📝 Hacer un pedido</h2>
+<label>Departamento</label><select id="deptos" onchange="cargarArt()"></select>
+<label>Artículo</label><select id="articulo" onchange="cargarUni()"></select>
+<label>Unidad</label><select id="unidad"></select>
+<div class="row"><div><label>Cantidad</label><input id="cant" type="number" value="1" min="1" oninput="calc()"></div><div><label>Precio</label><input id="precio" type="number" value="0" oninput="calc()"></div></div>
+<label>Nota (opcional)</label><input id="nota" placeholder="Ej: sin cebolla">
+<div class="card">Subtotal: <span class="total" id="subtotal">$0.00</span></div>
+<button class="btn" onclick="agregar()">+ Agregar Pedido</button>
+<h3>Pedido actual</h3><div id="lista"></div>
+<div class="card">Total: <span class="total" id="total-actual">$0.00</span><br><span class="small" id="total-cant"></span></div>
+<input id="nombre-cliente" placeholder="Nombre del cliente (opcional)">
+<button class="btn" onclick="guardarDia()">💾 Guardar Día / Pedido</button>
+<button class="btn2" onclick="ir('menu')">← Volver al menú</button>
 </div>
-
-<div id="sec-pedidos" style="display:none">
-<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card">
-<h3 style="margin:0">Nuevo Pedido</h3>
-<label>Nombre</label><input id="nombre" placeholder="Nombre del cliente">
-<label>Teléfono (Opcional - puedes dejarlo vacío)</label><input id="telefono" type="tel" placeholder="Opcional - Ej: 55 1234 5678">
-<label>Departamento</label>
-<div class="opt-row" id="deptos"></div>
-<label>Cantidad - Chalecos (Toca otra vez para quitar)</label>
-<div class="opt-row cant" id="cantidades"></div>
-<div id="chalecos-container"></div>
-
-<div class="nota-voz-box">
-<div class="titulo"><span>🎤 Nota de voz <small style="font-weight:400;color:#888">(Opcional)</small></span><span id="txt-tiempo-voz" style="font-size:12px;color:#cc0000;font-weight:800"></span></div>
-<p style="font-size:12px;color:#888;margin:4px 0 0">Graba aquí mismo, sin salir de la app</p>
-<div class="nota-voz-btns">
-<button id="btn-grabar" class="btn-grabar" onclick="toggleGrabacion()">● Grabar</button>
-<button id="btn-borrar-voz" class="btn-borrar" onclick="borrarNotaVoz()" style="display:none">🗑 Borrar</button>
+<div id="sec-guardados" class="hidden"><h2>📦 Pedidos Guardados</h2><div id="lista-guardados"></div><button class="btn2" onclick="ir('menu')">← Volver</button></div>
+<div id="sec-reporte" class="hidden"><h2>📊 Reporte</h2><div class="card"><b>Total vendido:</b> <span class="total" id="rep-total">$0.00</span><br><span class="small" id="rep-detalle"></span></div><label>Abonar / Pagaron</label><input id="abono" type="number" value="0"><button class="btn" onclick="abonar()">💰 Registrar Abono</button><div id="lista-abonos"></div><div class="card">Falta por pagar: <b id="rep-falta" style="color:red">$0.00</b></div><button class="btn2" onclick="borrarTodo()">🗑️ Borrar todo</button><button class="btn2" onclick="ir('menu')">← Volver</button></div>
 </div>
-<div id="audio-preview"></div>
-<p id="aviso-permiso-voz" style="font-size:12px;color:#cc0000;display:none;margin:6px 0 0"></p>
-</div>
-
-<label>Abono (Opcional - puedes dejarlo en $0)</label><input id="abono" type="number" placeholder="$ 0 - Opcional" oninput="calc()">
-<div class="calc"><div><span>Total:</span><b id="txt-total">$0</b></div><div><span>Abono:</span><span id="txt-abono">$0</span></div><div><span>Resta:</span><b id="txt-resta">$0</b></div><div><span>Detalle:</span><span id="txt-detalle-precio" style="text-align:right">-</span></div></div>
-<button onclick="agregar()">+ Agregar Pedido</button>
-</div>
-</div>
-
-<div id="sec-guardados" style="display:none">
-<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">📦 Pedidos Guardados</h3><p id="aviso-guardados"></p><div id="lista"></div></div>
-<div class="card" style="text-align:center"><div class="carpeta" style="margin:0;background:#eef6ff" onclick="toggleCarpeta()"><b>📁 Pedidos Completados (<span id="num-completados">0</span>)</b><br><span style="font-size:13px;color:#555" id="txt-carpeta">▶ Toca para ver - Toca un nombre para copiar</span></div><div id="lista-archivados" style="display:none;text-align:left;margin-top:10px"></div></div>
-</div>
-
-<div id="sec-reporte" style="display:none">
-<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">🚚 Reporte de entrega</h3><p id="aviso-reporte"></p><div id="lista-reporte"></div></div>
-</div>
-
-<div id="sec-total" style="display:none">
-<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">💰 Total General</h3><p style="color:#666;font-size:13px">Todos los pedidos - Nombre, costo total y si falta pagar.</p><div id="lista-total"></div><div class="total" id="total-total"></div></div>
-</div>
-
-<div id="sec-falta" style="display:none">
-<button class="btn-back" onclick="ir('menu')">← Volver al menú</button>
-<div class="card"><h3 style="margin:0">🧾 Falta por Cobrar</h3><p style="color:#666;font-size:13px">Ordenado por fecha - Solo los que deben.</p><div id="lista-falta"></div><div class="total" id="total-falta"></div></div>
-</div>
-
-</div>
-</div>
-
-<div class="modal-bg" id="modal-copiar">
-  <div class="modal">
-    <h3>📋 Copiar Pedido</h3>
-    <p id="modal-texto" style="color:#666;font-size:14px"></p>
-    <label>Nombre para el nuevo pedido</label>
-    <input id="input-nuevo-nombre" placeholder="Deja igual o escribe otro nombre">
-    <button onclick="confirmarCopiar()">Crear copia con este nombre</button>
-    <button onclick="cerrarModal()" style="background:#eee;color:#333;margin-top:8px">Cancelar</button>
-  </div>
-</div>
-
-<script type="module">
-import { VoiceRecorder } from 'https://cdn.jsdelivr.net/npm/capacitor-voice-recorder@6.0.0/dist/esm/index.js';
-window.VoiceRecorderPlugin = VoiceRecorder;
-</script>
-
 <script>
-// ===== LOGIN REFORZADO - NO DEPENDE DE NADA MÁS =====
-let USUARIOS_MAP = {"norbert":"Norbert","gaby":"Gaby","normis":"Normis"};
-let usuarioActual = '';
-try { usuarioActual = localStorage.getItem('usuario_gaby') || ''; } catch(e){ usuarioActual=''; }
-if(usuarioActual && !USUARIOS_MAP[usuarioActual.toLowerCase()]){
-  usuarioActual = '';
-  try{ localStorage.removeItem('usuario_gaby'); }catch(e){}
-}
-let PRECIOS_TALLA = {"XCH":220,"CH":240,"M":260,"G":280,"XL":300,"XL1":320,"XL2":340};
-
-function puedeModificarAbonos(){ if(usuarioActual==='Normis') return false; return true; }
-function puedeModificarReporte(){ if(usuarioActual==='Gaby') return false; return true; }
-
-function verClave(){
-  let inp = document.getElementById('clave');
-  if(!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  inp.focus();
-}
-function borrarSesion(){
-  try{ localStorage.removeItem('usuario_gaby'); }catch(e){}
-  usuarioActual = '';
-  let c = document.getElementById('clave');
-  if(c) c.value = '';
-  let err = document.getElementById('error-login');
-  if(err) err.style.display = 'none';
-  document.getElementById('login').style.display = 'block';
-  document.getElementById('app').style.display = 'none';
-  alert('Sesión borrada. Ahora escribe tu clave de nuevo.');
-}
-function entrar(){
-  try{
-    let inp = document.getElementById('clave');
-    let raw = inp ? inp.value.trim() : '';
-    let key = raw.toLowerCase();
-    let err = document.getElementById('error-login');
-    if(USUARIOS_MAP[key]){
-      usuarioActual = USUARIOS_MAP[key];
-      try{ localStorage.setItem('usuario_gaby', usuarioActual); }catch(e){}
-      if(err) err.style.display='none';
-      if(inp) inp.value='';
-      mostrarApp();
-    } else {
-      if(err){
-        err.style.display='block';
-        err.innerText = 'Clave "'+raw+'" no es correcta. Prueba: Gaby, Normis o Norbert';
-      } else {
-        alert('Clave incorrecta. Prueba: Gaby, Normis o Norbert');
-      }
-    }
-  }catch(e){
-    alert('Error al entrar: ' + e.message + ' - Intenta borrar sesión');
-  }
-}
-function salir(){
-  try{ localStorage.removeItem('usuario_gaby'); }catch(e){}
-  usuarioActual='';
-  document.getElementById('login').style.display='block';
-  document.getElementById('app').style.display='none';
-  let c=document.getElementById('clave'); if(c) c.value='';
-}
-// Hacerlas globales SIEMPRE
-window.verClave = verClave;
-window.borrarSesion = borrarSesion;
-window.entrar = entrar;
-window.salir = salir;
-
-function mostrarApp(){
-  if(!usuarioActual){ document.getElementById('login').style.display='block'; document.getElementById('app').style.display='none'; return; }
-  document.getElementById('login').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('txt-usuario').innerText = 'Hola, ' + usuarioActual + ' 👋';
-  let txt='';
-  if(usuarioActual==='Gaby') txt='Eres Gaby: Puedes ver Reporte, pero no puedes marcar Listo. Sí puedes abonar.';
-  if(usuarioActual==='Normis') txt='Eres Normis: Puedes ver Pedidos Guardados, pero no puedes abonar. Sí puedes marcar Listo.';
-  if(usuarioActual==='Norbert') txt='Eres Norbert: Puedes modificar todo';
-  document.getElementById('txt-permiso').innerText=txt;
-  document.getElementById('aviso-guardados').innerHTML = puedeModificarAbonos() ? '<span style="color:#666;font-size:13px">Toca el nombre para ver detalle y abonar. Pagado se marca solo al 100%.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes sumar abono.</div>';
-  document.getElementById('aviso-reporte').innerHTML = puedeModificarReporte() ? '<span style="color:#666;font-size:13px">Marca Listo cuando ya esté terminado.</span>' : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo.</div>';
-  mostrar();
-}
-// Conectar botones por ID + por Enter - doble seguro
-document.addEventListener('DOMContentLoaded', function(){
-  let bE = document.getElementById('btn-entrar');
-  if(bE) bE.addEventListener('click', entrar);
-  let bV = document.getElementById('btn-ver');
-  if(bV) bV.addEventListener('click', verClave);
-  let bB = document.getElementById('btn-borrar-sesion');
-  if(bB) bB.addEventListener('click', borrarSesion);
-  let inp = document.getElementById('clave');
-  if(inp) inp.addEventListener('keypress', function(e){ if(e.key==='Enter') entrar(); });
-  // Si ya había sesión, entrar directo
-  if(usuarioActual) mostrarApp();
-});
-// Respaldo inmediato por si DOMContentLoaded ya pasó
-setTimeout(function(){
-  let bE = document.getElementById('btn-entrar');
-  if(bE && !bE.dataset.conectado){ bE.dataset.conectado='1'; bE.addEventListener('click', entrar); }
-  let bV = document.getElementById('btn-ver');
-  if(bV && !bV.dataset.conectado){ bV.dataset.conectado='1'; bV.addEventListener('click', verClave); }
-  let bB = document.getElementById('btn-borrar-sesion');
-  if(bB && !bB.dataset.conectado){ bB.dataset.conectado='1'; bB.addEventListener('click', borrarSesion); }
-  if(usuarioActual) mostrarApp();
-}, 300);
-
-let pedidos = [];
-try{ pedidos = JSON.parse(localStorage.getItem('pedidos_gaby')||localStorage.getItem('pedidos')||'[]'); }catch(e){ pedidos=[]; }
-pedidos = pedidos.map(p=>{
-  if(!p.chalecos){
-    let tallasArr = p.tallas ? p.tallas : (p.talla ? [p.talla] : []);
-    let cant = p.cant || tallasArr.length || 1;
-    let chalecos = [];
-    for(let i=0;i<cant;i++){ chalecos.push({talla: tallasArr[i]||'', telas: p.tela?[p.tela]:[], colores: p.color?[p.color]:[]}); }
-    p.chalecos = chalecos;
-  } else {
-    p.chalecos = p.chalecos.map(ch=>{
-      ch.telas||[], colores: ch.colores||[]}; }
-      if(ch.talla!==undefined){ return {talla: ch.talla, telas: ch.telas||[], colores: ch.colores||[]}; }
-      return ch;
-    });
-  }
-  p.pagado = (p.resta===0 && p.total>0);
-  if(!p.fechaNum) p.fechaNum = new Date(p.fecha).getTime() || Date.now();
-  if(!p.telefono) p.telefono = '';
-  if(!p.notaVoz) p.notaVoz = '';
-  return p;
-});
-
-let cantSel = 0;
-let deptoSel='';
-let chalecosSel = [];
-let abierto = -1;
-let carpetaAbierta = false;
-let copiarIdx = -1;
-let notaVozActual = '';
-let grabando = false;
-let timerVoz = null;
-let segVoz = 0;
-
-function mostrarErrorVoz(msg){
-  let el = document.getElementById('aviso-permiso-voz');
-  el.style.display='block';
-  el.innerText = '⚠️ ' + msg;
-}
-function actualizarVistaVoz(){
-  let btn = document.getElementById('btn-grabar');
-  let btnBorrar = document.getElementById('btn-borrar-voz');
-  let preview = document.getElementById('audio-preview');
-  if(grabando){ btn.innerText = '■ Parar ('+segVoz+'s)'; btn.classList.add('grabando'); }
-  else { btn.innerText = notaVozActual ? '↻ Grabar otra vez' : '● Grabar'; btn.classList.remove('grabando'); }
-  if(notaVozActual){
-    btnBorrar.style.display='block';
-    preview.innerHTML = '<audio controls src="'+notaVozActual+'"></audio><p style="font-size:12px;color:#0a6b0a;margin:4px 0 0">✅ Nota guardada</p>';
-  } else { btnBorrar.style.display='none'; if(!grabando) preview.innerHTML=''; }
-}
-async function toggleGrabacion(){
-  let VR = window.VoiceRecorderPlugin || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.VoiceRecorder);
-  if(!VR){ mostrarErrorVoz('Aún no carga el grabador, espera 2 segundos'); return; }
-  document.getElementById('aviso-permiso-voz').style.display='none';
-  if(grabando){
-    try{
-      let res = await VR.stopRecording();
-      clearInterval(timerVoz);
-      document.getElementById('txt-tiempo-voz').innerText='';
-      grabando = false;
-      if(res && res.value && res.value.recordDataBase64){ notaVozActual = 'data:audio/mp4;base64,' + res.value.recordDataBase64; }
-      actualizarVistaVoz();
-    }catch(e){ grabando=false; clearInterval(timerVoz); actualizarVistaVoz(); }
-    return;
-  }
-  try{
-    let perm = await VR.requestAudioRecordingPermission();
-    if(perm && perm.value === false){ mostrarErrorVoz('Permiso negado. Ve a Ajustes → App → Permisos → Micrófono'); return; }
-    await VR.startRecording();
-    grabando = true; segVoz = 0;
-    document.getElementById('txt-tiempo-voz').innerText='● 0s';
-    timerVoz = setInterval(()=>{ segVoz++; document.getElementById('txt-tiempo-voz').innerText='● '+segVoz+'s'; actualizarVistaVoz(); },1000);
-    actualizarVistaVoz();
-  }catch(e){ mostrarErrorVoz('No se pudo grabar: ' + (e.message || e)); }
-}
-function borrarNotaVoz(){ notaVozActual=''; actualizarVistaVoz(); }
-function renderOpts(){
-  let deptos=['Aeromexico','Cargo','Connect','Marina','Remolque','Servicio'];
-  document.getElementById('deptos').innerHTML=deptos.map(t=>`<div class="opt ${deptoSel===t?'sel':''}" onclick="deptoSel='${t}';renderOpts()">${t}</div>`).join('');
-  let nums=[1,2,3,4,5];
-  document.getElementById('cantidades').innerHTML=nums.map(n=>`<div class="opt ${cantSel===n?'sel':''}" onclick="elegirCant(${n})">${n}</div>`).join('');
-  renderChalecos();
-}
-function elegirCant(n){
-  if(cantSel===n){ cantSel=0; chalecosSel=[]; }
-  else { cantSel=n; let nuevo=[]; for(let i=0;i<n;i++){ nuevo.push(chalecosSel[i] || {talla:'', telas:[], colores:[]}); } chalecosSel=nuevo; }
-  renderOpts(); calc();
-}
-function elegirTallaUnica(idx, valor){ chalecosSel[idx].talla = valor; renderChalecos(); calc(); }
-function toggleMulti(chalecoIdx, tipo, valor){
-  let arr = chalecosSel[chalecoIdx][tipo];
-  let idx = arr.indexOf(valor);
-  if(idx>=0){ arr.splice(idx,1); }
-  else { if(arr.length>=2){ alert('Solo puedes elegir hasta 2 opciones'); return; } arr.push(valor); }
-  renderChalecos(); calc();
-}
-function renderChalecos(){
-  let cont = document.getElementById('chalecos-container');
-  if(!cantSel){ cont.innerHTML='<p style="color:#888;font-size:13px">Primero elige la cantidad de chalecos</p>'; return; }
-  let tallas=['XCH','CH','M','G','XL','XL1','XL2'];
-  let telas=['Gabardina','Lisa','Puntitos','Red'];
-  let colores=['Amarillo','A. Marino','A. Rey','Gris','Naranja','Negra'];
-  let html='';
-  for(let i=0;i<cantSel;i++){
-    let ch = chalecosSel[i] || {talla:'', telas:[], colores:[]};
-    html+=`<div class="chaleco-grupo"><h4>🦺 Chaleco ${i+1}</h4>
-    <label style="margin:0">Talla - solo 1</label><div class="opt-row talla">`+tallas.map(t=>`<div class="opt ${ch.talla===t?'sel':''}" onclick="elegirTallaUnica(${i},'${t}')">${t}<small>$${PRECIOS_TALLA[t]}</small></div>`).join('')+`</div>
-    <label style="margin:0">Tela - puedes elegir hasta 2</label><div class="opt-row">`+telas.map(t=>`<div class="opt ${ch.telas.includes(t)?'sel':''}" onclick="toggleMulti(${i},'telas','${t}')">${t}</div>`).join('')+`</div>
-    <label style="margin:0">Color - puedes elegir hasta 2</label><div class="opt-row color">`+colores.map(t=>`<div class="opt ${ch.colores.includes(t)?'sel':''}" onclick="toggleMulti(${i},'colores','${t}')">${t}</div>`).join('')+`</div></div>`;
-  }
-  cont.innerHTML=html;
-}
-renderOpts();
-function calc(){
-  let ab=parseFloat(document.getElementById('abono').value||0);
-  let total=0; let detalle=[];
-  chalecosSel.forEach((ch,idx)=>{ if(ch.talla){ total+=PRECIOS_TALLA[ch.talla]; detalle.push('Chaleco '+(idx+1)+' '+ch.talla+' $'+PRECIOS_TALLA[ch.talla]); } });
-  let resta=total-ab; if(resta<0) resta=0;
-  document.getElementById('txt-total').innerText='$'+total;
-  document.getElementById('txt-abono').innerText='$'+ab;
-  document.getElementById('txt-resta').innerText='$'+resta;
-  document.getElementById('txt-detalle-precio').innerText= detalle.join(' | ') || '-';
-  return {total,resta};
-}
-function guardar(){try{localStorage.setItem('pedidos_gaby',JSON.stringify(pedidos));}catch(e){} mostrar();}
-function ir(v){
-  document.getElementById('menu').style.display=v==='menu'?'block':'none';
-  document.getElementById('sec-pedidos').style.display=v==='pedidos'?'block':'none';
-  document.getElementById('sec-guardados').style.display=v==='guardados'?'block':'none';
-  document.getElementById('sec-reporte').style.display=v==='reporte'?'block':'none';
-  document.getElementById('sec-total').style.display=v==='total'?'block':'none';
-  document.getElementById('sec-falta').style.display=v==='falta'?'block':'none';
-  mostrar();window.scrollTo(0,0);
-}
-function agregar(){
-  let c=document.getElementById('nombre').value.trim();
-  let tel=document.getElementById('telefono').value.trim();
-  let ab=parseFloat(document.getElementById('abono').value||0);
-  if(!c||!deptoSel||!cantSel){alert('Falta: Nombre, Departamento y Cantidad');return;}
-  for(let i=0;i<chalecosSel.length;i++){ if(!chalecosSel[i].talla){ alert('En Chaleco '+(i+1)+' elige 1 talla'); return; } }
-  let {total,resta}=calc();
-  let pagado = (resta===0 && total>0);
-  let tallasTxt = chalecosSel.map(ch=>ch.talla).join(', ');
-  let telasTxt = chalecosSel.map(ch=>ch.telas.join('+')).join(', ');
-  let coloresTxt = chalecosSel.map(ch=>ch.colores.join('+')).join(', ');
-  let ahora = new Date();
-  pedidos.unshift({c,telefono:tel,depto:deptoSel,cant:cantSel,chalecos:JSON.parse(JSON.stringify(chalecosSel)),talla:tallasTxt,tela:telasTxt,color:coloresTxt,pr: total/cantSel,ab,total,resta,pagado,listo:false,fecha:ahora.toLocaleString(),fechaNum:ahora.getTime(),por:usuarioActual||'Sin nombre',notaVoz:notaVozActual||''});
-  document.getElementById('nombre').value='';document.getElementById('telefono').value='';document.getElementById('abono').value='';cantSel=0;chalecosSel=[];deptoSel='';notaVozActual='';actualizarVistaVoz();renderOpts();calc();
-  guardar(); alert('Pedido guardado ✅'); ir('guardados');
-}
-function eliminar(i){
-  if(!puedeModificarAbonos() && usuarioActual==='Normis'){ alert('🔒 Normis solo puede ver, no puede eliminar'); return; }
-  if(confirm('¿Eliminar este pedido?')){pedidos.splice(i,1);guardar();}
-}
-function toggle(i,campo){
-  if(campo==='listo' && !puedeModificarReporte()){ alert('🔒 Gaby no puede marcar Listo, solo ver'); mostrar(); return; }
-  pedidos[i][campo]=!pedidos[i][campo];guardar();
-}
-function sumarAbono(i){
-  if(!puedeModificarAbonos()){ alert('🔒 Normis no puede sumar abono, solo ver'); return; }
-  let inp = document.getElementById('abono-mas-'+i);
-  let extra = parseFloat(inp.value||0);
-  if(!extra || extra<=0){alert('Escribe cuánto abono vas a sumar');return;}
-  pedidos[i].ab += extra;
-  pedidos[i].resta = pedidos[i].total - pedidos[i].ab;
-  if(pedidos[i].resta<=0){pedidos[i].resta=0; pedidos[i].pagado=true;}
-  else { pedidos[i].pagado=false; }
-  guardar();
-  alert('Abono sumado ✅ Ahora lleva $'+pedidos[i].ab+' de $'+pedidos[i].total);
-}
-function toggleDetalle(i){ abierto = (abierto===i ? -1 : i); mostrar(); }
-function toggleCarpeta(){ carpetaAbierta=!carpetaAbierta; mostrar(); }
-function abrirCopiar(i){
-  copiarIdx=i;
-  let x=pedidos[i];
-  document.getElementById('modal-texto').innerText = 'Vas a copiar el pedido de '+x.c+' ('+x.depto+' - '+x.cant+' Chaleco(s)).';
-  document.getElementById('input-nuevo-nombre').value = x.c;
-  document.getElementById('modal-copiar').classList.add('show');
-}
-function cerrarModal(){ document.getElementById('modal-copiar').classList.remove('show'); copiarIdx=-1; }
-function confirmarCopiar(){
-  if(copiarIdx<0) return;
-  let original = pedidos[copiarIdx];
-  let nuevoNombre = document.getElementById('input-nuevo-nombre').value.trim() || original.c;
-  let ahora = new Date();
-  let copia = JSON.parse(JSON.stringify(original));
-  copia.c = nuevoNombre; copia.ab = 0; copia.resta = copia.total; copia.pagado = false; copia.listo = false;
-  copia.fecha = ahora.toLocaleString(); copia.fechaNum = ahora.getTime(); copia.por = usuarioActual || 'Copia';
-  pedidos.unshift(copia);
-  guardar(); cerrarModal();
-  alert('Pedido copiado ✅ Nuevo pedido para '+nuevoNombre);
-  ir('guardados');
-}
-function descargarImagen(i){
-  let x=pedidos[i];
-  let cv=document.createElement('canvas'); cv.width=700; cv.height=900;
-  let ctx=cv.getContext('2d');
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,700,900);
-  ctx.fillStyle='#111'; ctx.fillRect(0,0,700,130);
-  ctx.fillStyle='#fff'; ctx.font='900 42px sans-serif'; ctx.textAlign='center';
-  ctx.fillText('🐾 GABY Y NORMIS',350,65); ctx.font='20px sans-serif'; ctx.fillText('PEDIDO',350,105);
-  ctx.fillStyle='#111'; ctx.textAlign='left'; ctx.font='700 26px sans-serif';
-  let y=190;
-  let lines=[['Cliente:',x.c],['Telefono:',x.telefono||'-'],['Departamento:',x.depto],['Cantidad:',x.cant+' Chalecos'],['Abono:','$'+x.ab],['Resta:','$'+x.resta],['Total:','$'+x.total],['Pagado:',x.pagado?'SI':'NO'],['Listo:',x.listo?'SI':'NO'],['Fecha:',x.fecha||'']];
-  lines.forEach(l=>{ctx.font='700 26px sans-serif';ctx.fillText(l[0],40,y);ctx.font='400 26px sans-serif';ctx.fillText(String(l[1]),280,y);y+=48;});
-  if(x.chalecos){ x.chalecos.forEach((ch,idx)=>{ y+=10; ctx.font='700 26px sans-serif'; ctx.fillText('Chaleco '+(idx+1)+':',40,y); y+=36; ctx.font='400 22px sans-serif'; ctx.fillText('Talla: '+(ch.talla||''),60,y); y+=32; ctx.fillText('Tela: '+ (ch.telas?ch.telas.join(' + '):''),60,y); y+=32; ctx.fillText('Color: '+ (ch.colores?ch.colores.join(' + '):''),60,y); y+=10; }); }
-  ctx.fillStyle='#888'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.fillText('Gracias por tu pedido ❤️',350,870);
-  let a=document.createElement('a'); a.download='pedido-'+x.c.replace(/\s+/g,'-')+'.png'; a.href=cv.toDataURL('image/png'); a.click();
-}
-function htmlPedidoDetalle(x,i){
-  let pct = x.total>0 ? Math.min(100, Math.round((x.ab/x.total)*100)) : 0;
-  let abonoHTML = '';
-  if(puedeModificarAbonos()){ abonoHTML = `<div class="abono-box"><label style="margin:0">Sumar abono</label><input id="abono-mas-${i}" type="number" placeholder="$ ¿Cuánto abonó?"><button class="btn-sumar" onclick="sumarAbono(${i});event.stopPropagation()">+ Sumar Abono</button></div>`; }
-  else { abonoHTML = `<div class="abono-box"><p style="margin:0;color:#888;font-size:13px">👀 Solo puedes ver. No puedes sumar abono.</p></div>`; }
-  let chalecosTxt = '';
-  if(x.chalecos){ chalecosTxt = x.chalecos.map((ch,idx)=>`Chaleco ${idx+1}: Talla ${ch.talla||'-'} | Tela ${ch.telas?ch.telas.join(' + '):'-'} | Color ${ch.colores?ch.colores.join(' + '):'-'}`).join('<br>'); }
-  else { chalecosTxt = `Tallas: ${x.talla||''} | Tela: ${x.tela||''} | Color: ${x.color||''}`; }
-  let isOpen = abierto===i;
-  let notaHtml = x.notaVoz ? `<div style="margin:8px 0"><span class="nota-mini">🎤 Tiene nota de voz</span><audio controls src="${x.notaVoz}" style="width:100%;height:36px;margin-top:6px"></audio></div>` : '';
-  return `<div><div class="pedido-mini" onclick="toggleDetalle(${i})"><div><b>${x.c} ${x.notaVoz?'🎤':''}</b><br><span style="color:#666;font-size:13px">${x.depto} • ${x.cant} Chaleco(s) • ${x.telefono? '📱 '+x.telefono+' • ':''}${isOpen?'▼ Cerrar':'▶ Ver detalle'}</span></div><div style="text-align:right"><div style="font-size:12px;color:#888">Falta pagar</div><div class="resta ${x.resta===0?'ok':''}">${x.resta===0?'✅ $0':'$'+x.resta}</div></div></div><div class="detalle ${isOpen?'show':''}"><span class="small">${chalecosTxt}<br>Tel: ${x.telefono||'-'} | ${x.fecha||''} | Por: ${x.por||'--'}</span><br>${notaHtml}<span class="small">Total: $${x.total} | Abono: $${x.ab} | Resta: $${x.resta}</span><br><div class="progress"><div style="width:${pct}%"></div></div><small>${pct}% pagado</small><br>${x.pagado?'<span class="badge badge-pagado">✓ Pagado - 100%</span>':'<span class="badge badge-no">○ Falta $'+x.resta+'</span>'} ${x.listo?'<span class="badge badge-listo">✓ Listo</span>':'<span class="badge badge-no">○ No Listo</span>'}<br>${abonoHTML}<button class="img-btn" onclick="descargarImagen(${i});event.stopPropagation()">⬇ Descargar imagen</button>${puedeModificarAbonos()?`<button class="del" onclick="eliminar(${i});event.stopPropagation()">🗑 Eliminar</button>`:''}</div></div>`;
-}
-function mostrar(){
-  let activos = pedidos.map((p,idx)=>({p,idx})).filter(o=>!(o.p.listo && o.p.pagado));
-  let archivados = pedidos.map((p,idx)=>({p,idx})).filter(o=>(o.p.listo && o.p.pagado));
-  archivados.sort((a,b)=>(b.p.fechaNum||0)-(a.p.fechaNum||0));
-  let totG=0; let faltaTotal=0;
-  pedidos.forEach(x=>{ totG+=x.total; faltaTotal+=x.resta; });
-  let h='';
-  activos.forEach(o=>{ h+=htmlPedidoDetalle(o.p,o.idx); });
-  if(!activos.length) h='<p style="color:#888">No hay pedidos activos.</p>';
-  document.getElementById('lista').innerHTML=h;
-  document.getElementById('num-completados').innerText = archivados.length;
-  document.getElementById('txt-carpeta').innerText = carpetaAbierta ? '▼ Cerrar' : '▶ Toca para ver - Toca un nombre para copiar';
-  let ha='';
-  archivados.forEach(o=>{ ha+=`<div class="completado-item" onclick="abrirCopiar(${o.idx})"><div><b>${o.p.c} 📋 ${o.p.notaVoz?'🎤':''}</b><br><span style="color:#666;font-size:13px">${o.p.depto}</span></div><div style="text-align:right"><span style="font-size:12px;color:#888">${o.p.fecha||''}</span><br><span style="font-size:12px;color:#0a6b0a">Toca para copiar</span></div></div>`; });
-  if(!archivados.length) ha='<p style="color:#888">Aún no hay completados.</p>';
-  document.getElementById('lista-archivados').innerHTML=ha;
-  document.getElementById('lista-archivados').style.display = carpetaAbierta ? 'block' : 'none';
-  let hr='';
-  let puedeReporte = puedeModificarReporte();
-  pedidos.forEach((x,i)=>{ hr+=`<div class="reporte-item"><div class="info"><b>${x.c} ${x.notaVoz?'🎤':''}</b><span style="font-size:13px;color:#666">${x.depto}</span></div><span class="badge ${x.pagado?'badge-pagado':'badge-no'}" style="white-space:nowrap">${x.pagado?'✓ Pagado':'○ Falta $'+x.resta}</span>${puedeReporte ? `<label class="check-box ${x.listo?'on-listo':''}" style="flex:0 0 95px"><input type="checkbox" ${x.listo?'checked':''} onchange="toggle(${i},'listo')"> Listo</label>` : `<label class="check-box disabled" style="flex:0 0 95px"><input type="checkbox" disabled ${x.listo?'checked':''}> ${x.listo?'✓ Listo':'○ Listo'}</label>`}</div>`; });
-  if(!pedidos.length) hr='<p style="color:#888">Aún no hay clientes.</p>';
-  document.getElementById('lista-reporte').innerHTML=hr;
-  let lt='';
-  let ordenTotal = [...pedidos].map((p,idx)=>({p,idx})).sort((a,b)=>(b.p.fechaNum||0)-(a.p.fechaNum||0));
-  ordenTotal.forEach(o=>{ lt+=`<div class="lista-simple-item"><div><b>${o.p.c} ${o.p.notaVoz?'🎤':''}</b><br><span>${o.p.fecha||''} • ${o.p.depto}</span></div><div style="text-align:right"><b>$${o.p.total}</b><br><span style="color:${o.p.resta===0?'#0a6b0a':'#cc0000'}">${o.p.resta===0?'✅ Pagado':'Falta $'+o.p.resta}</span></div></div>`; });
-  if(!pedidos.length) lt='<p style="color:#888">No hay pedidos.</p>';
-  document.getElementById('lista-total').innerHTML=lt;
-  document.getElementById('total-total').innerText='Total general: $'+totG;
-  let deudores = pedidos.map((p,idx)=>({p,idx})).filter(o=>o.p.resta>0).sort((a,b)=>(a.p.fechaNum||0)-(b.p.fechaNum||0));
-  let lf='';
-  deudores.forEach(o=>{ lf+=`<div class="lista-simple-item"><div><b>${o.p.c}</b><br><span>${o.p.fecha||''}</span></div><div style="text-align:right"><b style="color:#cc0000">Falta $${o.p.resta}</b><br><span>Total $${o.p.total}</span></div></div>`; });
-  if(!deudores.length) lf='<p style="color:#0a6b0a">✅ Nadie debe. Todo pagado.</p>';
-  document.getElementById('lista-falta').innerHTML=lf;
-  document.getElementById('total-falta').innerText='Falta cobrar total: $'+faltaTotal;
-  document.getElementById('r-total').innerText=pedidos.length;
-  document.getElementById('r-total-dinero').innerText='$'+totG;
-  document.getElementById('r-resta').innerText='$'+faltaTotal;
-  document.getElementById('r-pagado').innerText=pedidos.filter(x=>x.pagado).length;
-  document.getElementById('r-listo').innerText=pedidos.filter(x=>x.listo).length;
-}
-window.ir = ir; window.agregar = agregar; window.eliminar = eliminar; window.toggle = toggle;
-window.sumarAbono = sumarAbono; window.toggleDetalle = toggleDetalle; window.toggleCarpeta = toggleCarpeta;
-window.abrirCopiar = abrirCopiar; window.cerrarModal = cerrarModal; window.confirmarCopiar = confirmarCopiar;
-window.descargarImagen = descargarImagen; window.mostrar = mostrar; window.mostrarApp = mostrarApp;
-window.toggleGrabacion = toggleGrabacion; window.borrarNotaVoz = borrarNotaVoz;
-window.elegirCant = elegirCant; window.elegirTallaUnica = elegirTallaUnica; window.toggleMulti = toggleMulti;
-window.renderOpts = renderOpts; window.calc = calc;
-</script>
-</body>
-</html>
+const DEPTOS={
+"Frutas":["Manzana","Plátano","Naranja","Uva","Mango","Fresa","Limón","Pera"],
+"Verduras":["Jitomate","Cebolla","Papa","Zanahoria","Lechuga","Chile","Ajo","Pepino"],
+"Abarrotes":["Arroz","Frijol","Aceite","Azúcar","Sal","Harina","Leche","Huevo"],
+"Pan":["Bolillo","Concha","Donas","Pan de caja","Cuernito"],
+"Otros":["Agua","Refresco","Jugo","Galletas","Dulces"]};
+const UNIDADES=["Pieza","Kilo","Litro","Bolsa","Caja","Paquete"];
+let pedidos=[],guardados=JSON.parse(localStorage.getItem('guardados_gaby')||'[]'),abonos=JSON.parse(localStorage.getItem('abonos_gaby')||'[]');
+let usuario=localStorage.getItem('usuario_gaby')||'';
+function entrar(){let v=document.getElementById('clave').value.trim().toLowerCase();let m={gaby:'Gaby',normis:'Normis',norbert:'Norbert'};if(!m[v]){document.getElementById('error-login').style.display='block';return}usuario=m[v];localStorage.setItem('usuario_gaby',usuario);document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('txt-usuario').innerText='Hola, '+usuario;ir('menu');mostrarGuardados();reporte()}
+function salir(){localStorage.removeItem('usuario_gaby');location.reload()}
+function ir(sec){['menu','sec-pedidos','sec-guardados','sec-reporte'].forEach(id=>document.getElementById(id).classList.add('hidden'));if(sec=='menu')document.getElementById('menu').classList.remove('hidden');else document.getElementById('sec-'+sec).classList.remove('hidden');window.scrollTo(0,0);if(sec=='guardados')mostrarGuardados();if(sec=='reporte')reporte();resumen()}
+function init(){let d=document.getElementById('deptos');d.innerHTML=Object.keys(DEPTOS).map(k=>'<option>'+k+'</option>').join('');cargarArt();if(usuario){document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('txt-usuario').innerText='Hola, '+usuario;ir('menu');mostrarGuardados();reporte()}}
+function cargarArt(){let d=document.getElementById('deptos').value;document.getElementById('articulo').innerHTML=DEPTOS[d].map(a=>'<option>'+a+'</option>').join('');cargarUni()}
+function cargarUni(){document.getElementById('unidad').innerHTML=UNIDADES.map(u=>'<option>'+u+'</option>').join('')}
+function calc(){let c=+document.getElementById('cant').value||0,p=+document.getElementById('precio').value||0;document.getElementById('subtotal').innerText='$'+(c*p).toFixed(2)}
+function agregar(){let a=document.getElementById('articulo').value,d=document.getElementById('deptos').value,u=document.getElementById('unidad').value,c=+document.getElementById('cant').value||0,p=+document.getElementById('precio').value||0,n=document.getElementById('nota').value;if(!c){alert('Pon cantidad');return}pedidos.push({a,d,u,c,p,n,total:c*p});document.getElementById('nota').value='';mostrarActual()}
+function mostrarActual(){let h=pedidos.map((x,i)=>'<div class="card"><b>'+x.a+'</b> <span class="tag">'+x.d+'</span><br>'+x.c+' '+x.u+' x $'+x.p.toFixed(2)+' = <b>$'+x.total.toFixed(2)+'</b> '+(x.n?'<br><i>'+x.n+'</i>':'')+'<br><button onclick="pedidos.splice('+i+',1);mostrarActual()" style="background:#fee;padding:6px 10px;margin-top:6px">❌ Quitar</button></div>').join('')||'<p class="small">Aún no agregas nada</p>';document.getElementById('lista').innerHTML=h;let t=pedidos.reduce((s,x)=>s+x.total,0);document.getElementById('total-actual').innerText='$'+t.toFixed(2);document.getElementById('total-cant').innerText=pedidos.length+' productos';resumen()}
+function guardarDia(){if(!pedidos.length){alert('Agrega algo primero');return}let cli=document.getElementById('nombre-cliente').value||'Cliente';let total=pedidos.reduce((s,x)=>s+x.total,0);guardados.unshift({fecha:new Date().toLocaleString(),cliente:cli,items:[...pedidos],total,usuario});localStorage.setItem('guardados_gaby',JSON.stringify(guardados));pedidos=[];document.getElementById('nombre-cliente').value='';mostrarActual();mostrarGuardados();alert('✅ Guardado: $'+total.toFixed(2));ir('guardados')}
+function mostrarGuardados(){document.getElementById('lista-guardados').innerHTML=guardados.map((g,i)=>'<div class="card"><b>'+g.cliente+'</b> - '+g.fecha+'<br>'+g.items.map(x=>x.c+' '+x.u+' '+x.a+' $'+x.total.toFixed(2)).join('<br>')+'<br><b>Total: $'+g.total.toFixed(2)</b><br><button onclick="guardados.splice('+i+',1);localStorage.setItem(\'guardados_gaby\',JSON.stringify(guardados));mostrarGuardados();reporte()" style="background:#fee;padding:6px 10px;margin-top:6px">❌ Borrar</button></div>').join('')||'<p class="small">No hay guardados</p>'}
+function reporte(){let tv=guardados.reduce((s,g)=>s+g.total,0);let ab=abonos.reduce((s,a)=>s+a.monto,0);document.getElementById('rep-total').innerText='$'+tv.toFixed(2);document.getElementById('rep-detalle').innerText=guardados.length+' pedidos guardados | Abonado: $'+ab.toFixed(2);document.getElementById('rep-falta').innerText='$'+Math.max(0,tv-ab).toFixed(2);document.getElementById('lista-abonos').innerHTML=abonos.map(a=>'<div class="small">💰 $'+a.monto.toFixed(2)+' - '+a.fecha+'</div>').join('')}
+function abonar(){let m=+document.getElementById('abono').value||0;if(!m){alert('Pon cuánto abonaron');return}abonos.unshift({monto:m,fecha:new Date().toLocaleString()});localStorage.setItem('abonos_gaby',JSON.stringify(abonos));document.getElementById('abono').value='0';reporte();alert('✅ Abono registrado')}
+function resumen(){let t=pedidos.reduce((s,x)=>s+x.total,0);document.getElementById('resumen-hoy').innerText=pedidos.length+' en pedido actual ($'+t.toFixed(2)+') | '+guardados.length+' guardados'}
+function borrarTodo(){if(!confirm('¿Borrar TODO?'))return;guardados=[];abonos=[];pedidos=[];localStorage.removeItem('guardados_gaby');localStorage.removeItem('abonos_gaby');mostrarActual();mostrarGuardados();reporte()}
+init();calc();
+</script></body></html>
