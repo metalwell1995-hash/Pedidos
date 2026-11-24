@@ -104,7 +104,7 @@ audio{width:100%;margin-top:8px;height:36px}
       <input id="clave" type="password" placeholder="Ej: Gaby" style="flex:1">
       <button id="btn-ver" type="button" style="width:auto;padding:12px 14px;font-size:13px;background:#eee;color:#333">👁 Ver</button>
     </div>
-    <button id="btn-entrar" type="button">Entrar</button>
+    <button id="btn-entrar" type="button" onclick="let v=document.getElementById('clave').value.trim().toLowerCase();let m={gaby:'Gaby',normis:'Normis',norbert:'Norbert'};if(m[v]){try{localStorage.setItem('usuario_gaby',m[v])}catch(e){}document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('txt-usuario').innerText='Hola, '+m[v];}else{document.getElementById('error-login').style.display='block'}">Entrar</button>
     <p id="error-login" style="color:#cc0000;font-size:13px;display:none">Clave incorrecta, intenta de nuevo</p>
     <button id="btn-borrar-sesion" type="button" style="background:none;color:#888;font-size:13px;font-weight:400;padding:8px">¿No te deja entrar? Toca aquí para borrar sesión</button>
   </div>
