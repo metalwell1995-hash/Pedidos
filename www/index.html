@@ -101,7 +101,6 @@
     <span id="txt-usuario">Hola</span>
     <button onclick="salir()">Salir</button>
   </div>
-
   <div class="wrap">
     <div id="menu">
       <div class="resumen-simple">
@@ -131,7 +130,6 @@
         <label>Cantidad - Chalecos (Toca otra vez para quitar)</label>
         <div class="opt-row cant" id="cantidades"></div>
         <div id="chalecos-container"></div>
-
         <div class="nota-voz-box">
           <b style="font-size: 13px;">🎤 Nota de voz (Opcional)</b>
           <span id="txt-tiempo-voz" style="color: #c00; font-weight: 800; font-size: 12px;"></span>
@@ -143,7 +141,6 @@
           <div id="audio-preview"></div>
           <p id="aviso-permiso-voz" style="font-size: 12px; color: #c00; display: none;"></p>
         </div>
-
         <label>Abono (Opcional)</label>
         <input id="abono" type="number" placeholder="$ 0" oninput="calc()">
         <div class="calc">
@@ -204,7 +201,7 @@
 <div id="modal-ticket" class="modal-bg">
   <div class="modal">
     <div id="ticket-contenido"></div>
-    <button id="btn-compartir-ticket" style="background: #0a4ab5; margin-top: 10px; padding: 11px; font-size: 14px;">📤 Compartir ticket</button>
+    <button id="btn-compartir-ticket" onclick="compartirTicketImagen()" style="background: #0a4ab5; margin-top: 10px; padding: 11px; font-size: 14px;">📤 Compartir ticket (imagen)</button>
     <button onclick="pasarACopiar()" style="margin-top: 8px; padding: 11px; font-size: 14px;">📋 Copiar este pedido</button>
     <button onclick="cerrarTicket()" style="background: #eee; color: #333; margin-top: 8px; padding: 11px; font-size: 14px;">Cerrar</button>
   </div>
@@ -231,26 +228,21 @@ let M = { "norbert": "Norbert", "gaby": "Gaby", "normis": "Normis" };
 let U = '';
 try { U = localStorage.getItem('usuario_gaby') || ''; } catch(e) {}
 if (U && !M[U.toLowerCase()]) { U = ''; try { localStorage.removeItem('usuario_gaby'); } catch(e) {} }
-
 let P = { "XCH": 220, "CH": 240, "M": 260, "G": 280, "XL": 300, "XL1": 320, "XL2": 340 };
-
 function pa() { return U !== 'Normis'; }
 function pr() { return U !== 'Gaby'; }
-
 function verClave() {
   let i = document.getElementById('clave');
   let b = document.getElementById('btn-ver');
   if (i.type === 'password') { i.type = 'text'; b.innerText = '🙈 Ocultar'; }
   else { i.type = 'password'; b.innerText = '👁 Ver'; }
 }
-
 function borrarSesion() {
   try { localStorage.removeItem('usuario_gaby'); } catch(e) {}
   U = '';
   document.getElementById('login').style.display = 'block';
   document.getElementById('app').style.display = 'none';
 }
-
 function entrar() {
   let raw = document.getElementById('clave').value.trim().toLowerCase();
   if (M[raw]) {
@@ -262,7 +254,6 @@ function entrar() {
     document.getElementById('error-login').style.display = 'block';
   }
 }
-
 function salir() {
   try { localStorage.removeItem('usuario_gaby'); } catch(e) {}
   U = '';
@@ -270,7 +261,6 @@ function salir() {
   document.getElementById('app').style.display = 'none';
   document.getElementById('clave').value = '';
 }
-
 function mostrarApp() {
   if (!U) {
     document.getElementById('login').style.display = 'block';
@@ -292,7 +282,6 @@ function mostrarApp() {
     : '<div class="aviso">👀 Solo puedes ver. No puedes marcar Listo.</div>';
   mostrar();
 }
-
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('btn-entrar').addEventListener('click', entrar);
   document.getElementById('btn-ver').addEventListener('click', verClave);
@@ -300,10 +289,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('clave').addEventListener('keypress', function(e) { if (e.key === 'Enter') entrar(); });
   if (U) mostrarApp();
 });
-
 let pedidos = [];
 try { pedidos = JSON.parse(localStorage.getItem('pedidos_gaby') || localStorage.getItem('pedidos') || '[]'); } catch(e) { pedidos = []; }
-
 pedidos = pedidos.map(function(p) {
   if (!p.chalecos) {
     let a = p.tallas ? p.tallas : (p.talla ? [p.talla] : []);
@@ -323,15 +310,12 @@ pedidos = pedidos.map(function(p) {
   if (!p.notaVoz) p.notaVoz = '';
   return p;
 });
-
 let cantSel = 0, deptoSel = '', chalecosSel = [], abierto = -1, carpetaAbierta = false, copiarIdx = -1, ticketIdx = -1, notaVozActual = '', grabando = false, timerVoz = null, segVoz = 0;
-
 function mostrarErrorVoz(m) {
   let e = document.getElementById('aviso-permiso-voz');
   e.style.display = 'block';
   e.innerText = '⚠️ ' + m;
 }
-
 function actualizarVistaVoz() {
   let b = document.getElementById('btn-grabar');
   let bb = document.getElementById('btn-borrar-voz');
@@ -346,7 +330,6 @@ function actualizarVistaVoz() {
     if (!grabando) pv.innerHTML = '';
   }
 }
-
 async function toggleGrabacion() {
   let VR = window.VoiceRecorderPlugin || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.VoiceRecorder);
   if (!VR) { mostrarErrorVoz('Aún no carga el grabador, espera 2 segundos'); return; }
@@ -371,9 +354,7 @@ async function toggleGrabacion() {
     actualizarVistaVoz();
   } catch(e) { mostrarErrorVoz('No se pudo grabar: ' + (e.message || e)); }
 }
-
 function borrarNotaVoz() { notaVozActual = ''; actualizarVistaVoz(); }
-
 function renderOpts() {
   let d = ['Aeromexico', 'Cargo', 'Connect', 'Marina', 'Remolque', 'Servicio'];
   document.getElementById('deptos').innerHTML = d.map(function(t) {
@@ -384,7 +365,6 @@ function renderOpts() {
   }).join('');
   renderChalecos();
 }
-
 function elegirCant(n) {
   if (cantSel === n) { cantSel = 0; chalecosSel = []; }
   else {
@@ -395,9 +375,7 @@ function elegirCant(n) {
   }
   renderOpts(); calc();
 }
-
 function elegirTallaUnica(i, v) { chalecosSel[i].talla = v; renderChalecos(); calc(); }
-
 function toggleMulti(i, tipo, v) {
   let a = chalecosSel[i][tipo];
   let j = a.indexOf(v);
@@ -408,7 +386,6 @@ function toggleMulti(i, tipo, v) {
   }
   renderChalecos(); calc();
 }
-
 function renderChalecos() {
   let c = document.getElementById('chalecos-container');
   if (!cantSel) { c.innerHTML = '<p style="color:#888;font-size:13px;">Primero elige la cantidad</p>'; return; }
@@ -432,7 +409,6 @@ function renderChalecos() {
   c.innerHTML = h;
 }
 renderOpts();
-
 function calc() {
   let ab = parseFloat(document.getElementById('abono').value || 0);
   let total = 0, det = [];
@@ -447,12 +423,10 @@ function calc() {
   document.getElementById('txt-detalle-precio').innerText = det.join(' | ') || '-';
   return { total: total, resta: resta };
 }
-
 function guardar() {
   try { localStorage.setItem('pedidos_gaby', JSON.stringify(pedidos)); } catch(e) {}
   mostrar();
 }
-
 function ir(v) {
   ['menu', 'pedidos', 'guardados', 'reporte', 'total', 'falta'].forEach(function(s) {
     document.getElementById(s === 'menu' ? 'menu' : 'sec-' + s).style.display = (v === s ? 'block' : 'none');
@@ -460,7 +434,6 @@ function ir(v) {
   mostrar();
   window.scrollTo(0, 0);
 }
-
 function agregar() {
   let c = document.getElementById('nombre').value.trim();
   let tel = document.getElementById('telefono').value.trim();
@@ -485,21 +458,18 @@ function agregar() {
   document.getElementById('abono').value = '';
   cantSel = 0; chalecosSel = []; deptoSel = ''; notaVozActual = '';
   actualizarVistaVoz(); renderOpts(); calc(); guardar();
-  alert('Pedido guardado ✅');
   ir('guardados');
+  setTimeout(function() { verTicket(0); }, 150);
 }
-
 function eliminar(i) {
   if (!pa() && U === 'Normis') { alert('🔒 Normis solo puede ver'); return; }
   if (confirm('¿Eliminar este pedido?')) { pedidos.splice(i, 1); guardar(); }
 }
-
 function toggle(i, campo) {
   if (campo === 'listo' && !pr()) { alert('🔒 Gaby no puede marcar Listo'); mostrar(); return; }
   pedidos[i][campo] = !pedidos[i][campo];
   guardar();
 }
-
 function sumarAbono(i) {
   if (!pa()) { alert('🔒 Normis no puede sumar abono'); return; }
   let inp = document.getElementById('abono-mas-' + i);
@@ -512,13 +482,12 @@ function sumarAbono(i) {
   guardar();
   alert('Abono sumado ✅ Lleva $' + pedidos[i].ab + ' de $' + pedidos[i].total);
 }
-
 function toggleDetalle(i) { abierto = (abierto === i ? -1 : i); mostrar(); }
 function toggleCarpeta() { carpetaAbierta = !carpetaAbierta; mostrar(); }
-
 function verTicket(i) {
   ticketIdx = i;
   let x = pedidos[i];
+  if (!x) return;
   let ch = '';
   if (x.chalecos) {
     ch = x.chalecos.map(function(c, idx) {
@@ -539,9 +508,79 @@ function verTicket(i) {
     '<div class="linea"></div><p style="text-align:center;margin:0;font-size:12px;color:#666;">Gracias por tu pedido</p></div>';
   document.getElementById('modal-ticket').style.display = 'flex';
 }
-
 function cerrarTicket() { document.getElementById('modal-ticket').style.display = 'none'; }
-
+function dibujarTicketImagen(x) {
+  let cv = document.createElement('canvas');
+  let ctx = cv.getContext('2d');
+  let W = 520;
+  let alto = 440 + (x.chalecos ? x.chalecos.length * 36 : 30);
+  cv.width = W; cv.height = alto;
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, alto);
+  let y = 42;
+  ctx.fillStyle = '#111111'; ctx.textAlign = 'center'; ctx.font = '800 22px sans-serif'; ctx.fillText('TICKET', W / 2, y);
+  y += 22; ctx.font = '400 13px sans-serif'; ctx.fillStyle = '#666666'; ctx.fillText(x.fecha || '', W / 2, y);
+  y += 18;
+  ctx.strokeStyle = '#999999'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W - 20, y); ctx.stroke(); ctx.setLineDash([]);
+  y += 30; ctx.textAlign = 'left'; ctx.fillStyle = '#111111';
+  function fila(a, b, bold) {
+    ctx.font = '400 16px sans-serif'; ctx.fillText(a, 20, y);
+    ctx.font = bold ? '800 16px sans-serif' : '400 16px sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText(b, W - 20, y); ctx.textAlign = 'left'; y += 28;
+  }
+  fila('Cliente:', x.c, true);
+  fila('Tel:', x.telefono || '-');
+  fila('Depto:', x.depto);
+  y += 4; ctx.strokeStyle = '#999999'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W - 20, y); ctx.stroke(); ctx.setLineDash([]);
+  y += 30;
+  if (x.chalecos) {
+    x.chalecos.forEach(function(ch, idx) {
+      ctx.font = '400 15px sans-serif'; ctx.fillStyle = '#222222';
+      ctx.fillText('Chaleco ' + (idx + 1) + ': ' + (ch.talla || '-') + ' - ' + (ch.telas ? ch.telas.join(' + ') : '-') + ' - ' + (ch.colores ? ch.colores.join(' + ') : '-'), 20, y);
+      y += 28;
+    });
+  }
+  y += 6; ctx.strokeStyle = '#999999'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W - 20, y); ctx.stroke(); ctx.setLineDash([]);
+  y += 30;
+  fila('Total:', '$' + x.total, true);
+  fila('Abono:', '$' + x.ab);
+  fila('Resta:', '$' + x.resta, true);
+  fila('Estado:', (x.pagado ? 'Pagado' : 'Falta pagar') + ' / ' + (x.listo ? 'Listo' : 'No listo'));
+  y += 10; ctx.strokeStyle = '#999999'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(W - 20, y); ctx.stroke(); ctx.setLineDash([]);
+  y += 30; ctx.textAlign = 'center'; ctx.font = '400 13px sans-serif'; ctx.fillStyle = '#666666'; ctx.fillText('Gracias por tu pedido', W / 2, y);
+  return cv;
+}
+async function compartirTicketImagen() {
+  if (ticketIdx < 0 || !pedidos[ticketIdx]) { alert('Primero abre un ticket'); return; }
+  let x = pedidos[ticketIdx];
+  let btn = document.getElementById('btn-compartir-ticket');
+  let textoViejo = btn.innerText;
+  btn.innerText = '⏳ Creando imagen...';
+  try {
+    let cv = dibujarTicketImagen(x);
+    let blob = await new Promise(function(res) { cv.toBlob(res, 'image/png'); });
+    if (!blob) throw new Error('no blob');
+    let nombre = 'ticket-' + x.c.replace(/\s+/g, '-') + '.png';
+    let file = new File([blob], nombre, { type: 'image/png' });
+    if (navigator.share) {
+      try {
+        await navigator.share({ files: [file], title: 'Ticket - ' + x.c, text: 'Ticket de ' + x.c });
+        btn.innerText = textoViejo;
+        return;
+      } catch(e) {
+        if (e && e.name === 'AbortError') { btn.innerText = textoViejo; return; }
+      }
+    }
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url; a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+    alert('Imagen descargada ✅ Ahora la puedes mandar por WhatsApp desde tu galería');
+  } catch(e) {
+    alert('No se pudo compartir la imagen, intenta de nuevo: ' + (e.message || e));
+  }
+  btn.innerText = textoViejo;
+}
 function pasarACopiar() {
   cerrarTicket();
   copiarIdx = ticketIdx;
@@ -550,9 +589,7 @@ function pasarACopiar() {
   document.getElementById('input-nuevo-nombre').value = x.c;
   document.getElementById('modal-copiar').style.display = 'flex';
 }
-
 function cerrarModal() { document.getElementById('modal-copiar').style.display = 'none'; copiarIdx = -1; }
-
 function confirmarCopiar() {
   if (copiarIdx < 0) return;
   let o = pedidos[copiarIdx];
@@ -566,54 +603,6 @@ function confirmarCopiar() {
   alert('Pedido copiado ✅ para ' + nn);
   ir('guardados');
 }
-
-async function descargarImagen(i) {
-  if (i === undefined || i === null) i = ticketIdx;
-  let x = pedidos[i];
-  let cv = document.createElement('canvas');
-  let ctx = cv.getContext('2d');
-  let W = 420, alto = 380 + (x.chalecos ? x.chalecos.length * 55 : 40);
-  cv.width = W; cv.height = alto;
-  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, alto);
-  let y = 34;
-  ctx.fillStyle = '#111'; ctx.textAlign = 'center'; ctx.font = '800 18px sans-serif'; ctx.fillText('TICKET', W / 2, y);
-  y += 18; ctx.font = '400 12px sans-serif'; ctx.fillStyle = '#666'; ctx.fillText(x.fecha || '', W / 2, y);
-  y += 18; ctx.strokeStyle = '#999'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(16, y); ctx.lineTo(W - 16, y); ctx.stroke(); ctx.setLineDash([]);
-  y += 22; ctx.textAlign = 'left'; ctx.fillStyle = '#111';
-  function f(a, b, bold) {
-    ctx.font = '400 14px sans-serif'; ctx.fillText(a, 16, y);
-    ctx.font = (bold ? '800 14px sans-serif' : '400 14px sans-serif');
-    ctx.textAlign = 'right'; ctx.fillText(b, W - 16, y); ctx.textAlign = 'left'; y += 22;
-  }
-  f('Cliente:', x.c, true);
-  f('Tel:', x.telefono || '-');
-  f('Depto:', x.depto);
-  y += 4; ctx.strokeStyle = '#999'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(16, y); ctx.lineTo(W - 16, y); ctx.stroke(); ctx.setLineDash([]);
-  y += 22;
-  if (x.chalecos) {
-    x.chalecos.forEach(function(ch, idx) {
-      ctx.font = '400 13px sans-serif';
-      ctx.fillText('Chaleco ' + (idx + 1) + ': ' + (ch.talla || '-') + ' - ' + (ch.telas ? ch.telas.join(' + ') : '-') + ' - ' + (ch.colores ? ch.colores.join(' + ') : '-'), 16, y);
-      y += 22;
-    });
-  }
-  y += 4; ctx.strokeStyle = '#999'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(16, y); ctx.lineTo(W - 16, y); ctx.stroke(); ctx.setLineDash([]);
-  y += 22;
-  f('Total:', '$' + x.total, true);
-  f('Abono:', '$' + x.ab);
-  f('Resta:', '$' + x.resta, true);
-  f('Estado:', (x.pagado ? 'Pagado' : 'Falta pagar') + ' / ' + (x.listo ? 'Listo' : 'No listo'));
-  y += 10; ctx.strokeStyle = '#999'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(16, y); ctx.lineTo(W - 16, y); ctx.stroke(); ctx.setLineDash([]);
-  y += 22; ctx.textAlign = 'center'; ctx.font = '400 12px sans-serif'; ctx.fillStyle = '#666'; ctx.fillText('Gracias por tu pedido', W / 2, y);
-  cv.toBlob(async function(blob) {
-    let file = new File([blob], 'ticket-' + x.c.replace(/\s+/g, '-') + '.png', { type: 'image/png' });
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'Ticket', text: 'Pedido de ' + x.c }); return; } catch(e) {}
-    }
-    let a = document.createElement('a'); a.download = file.name; a.href = URL.createObjectURL(blob); a.click();
-  }, 'image/png');
-}
-
 function htmlPedidoDetalle(x, i) {
   let pct = x.total > 0 ? Math.min(100, Math.round((x.ab / x.total) * 100)) : 0;
   let abonoHTML = '';
@@ -628,23 +617,20 @@ function htmlPedidoDetalle(x, i) {
   }).join('<br>');
   let isOpen = abierto === i;
   let nota = x.notaVoz ? '<div style="margin:8px 0;"><span class="nota-mini">🎤 Tiene nota de voz</span><audio controls src="' + x.notaVoz + '"></audio></div>' : '';
-  return '<div><div class="pedido-mini" onclick="toggleDetalle(' + i + ')"><div><b>' + x.c + ' ' + (x.notaVoz ? '🎤' : '') + '</b><br><span class="small">' + x.depto + ' • ' + x.cant + ' Chaleco(s) • ' + (x.telefono ? '📱 ' + x.telefono + ' • ' : '') + (isOpen ? '▼ Cerrar' : '▶ Ver detalle') + '</span></div><div style="text-align:right;"><div style="font-size:12px;color:#888;">Falta pagar</div><div class="resta ' + (x.resta === 0 ? 'ok' : '') + '">' + (x.resta === 0 ? '✅ $0' : '$' + x.resta) + '</div></div></div><div class="detalle ' + (isOpen ? 'show' : '') + '"><span class="small">' + ct + '<br>Tel: ' + (x.telefono || '-') + ' | ' + (x.fecha || '') + ' | Por: ' + (x.por || '--') + '</span><br>' + nota + '<span class="small">Total: $' + x.total + ' | Abono: $' + x.ab + ' | Resta: $' + x.resta + '</span><br><div class="progress"><div style="width:' + pct + '%"></div></div><small>' + pct + '% pagado</small><br>' + (x.pagado ? '<span class="badge badge-pagado">✓ Pagado</span>' : '<span class="badge badge-no">○ Falta $' + x.resta + '</span>') + ' ' + (x.listo ? '<span class="badge badge-listo">✓ Listo</span>' : '<span class="badge badge-no">○ No Listo</span>') + '<br>' + abonoHTML + '<button class="img-btn" onclick="verTicket(' + i + ');event.stopPropagation()">🧾 Ver ticket</button>' + (pa() ? '<button class="del" onclick="eliminar(' + i + ');event.stopPropagation()">🗑 Eliminar</button>' : '') + '</div></div>';
+  return '<div><div class="pedido-mini" onclick="toggleDetalle(' + i + ')"><div><b>' + x.c + ' ' + (x.notaVoz ? '🎤' : '') + '</b><br><span class="small">' + x.depto + ' • ' + x.cant + ' Chaleco(s) • ' + (x.telefono ? '📱 ' + x.telefono + ' • ' : '') + (isOpen ? '▼ Cerrar' : '▶ Ver detalle') + '</span><br><button class="img-btn" onclick="verTicket(' + i + ');event.stopPropagation()">🧾 Ver ticket</button></div><div style="text-align:right;"><div style="font-size:12px;color:#888;">Falta pagar</div><div class="resta ' + (x.resta === 0 ? 'ok' : '') + '">' + (x.resta === 0 ? '✅ $0' : '$' + x.resta) + '</div></div></div><div class="detalle ' + (isOpen ? 'show' : '') + '"><span class="small">' + ct + '<br>Tel: ' + (x.telefono || '-') + ' | ' + (x.fecha || '') + ' | Por: ' + (x.por || '--') + '</span><br>' + nota + '<span class="small">Total: $' + x.total + ' | Abono: $' + x.ab + ' | Resta: $' + x.resta + '</span><br><div class="progress"><div style="width:' + pct + '%"></div></div><small>' + pct + '% pagado</small><br>' + (x.pagado ? '<span class="badge badge-pagado">✓ Pagado</span>' : '<span class="badge badge-no">○ Falta $' + x.resta + '</span>') + ' ' + (x.listo ? '<span class="badge badge-listo">✓ Listo</span>' : '<span class="badge badge-no">○ No Listo</span>') + '<br>' + abonoHTML + '<button class="img-btn" onclick="verTicket(' + i + ');event.stopPropagation()">🧾 Ver ticket</button>' + (pa() ? '<button class="del" onclick="eliminar(' + i + ');event.stopPropagation()">🗑 Eliminar</button>' : '') + '</div></div>';
 }
-
 function mostrar() {
   let activos = pedidos.map(function(p, idx) { return { p: p, idx: idx }; }).filter(function(o) { return !(o.p.listo && o.p.pagado); });
   let archivados = pedidos.map(function(p, idx) { return { p: p, idx: idx }; }).filter(function(o) { return (o.p.listo && o.p.pagado); });
   archivados.sort(function(a, b) { return (b.p.fechaNum || 0) - (a.p.fechaNum || 0); });
   let totG = 0, faltaTotal = 0;
   pedidos.forEach(function(x) { totG += x.total; faltaTotal += x.resta; });
-
   let h = '';
   activos.forEach(function(o) { h += htmlPedidoDetalle(o.p, o.idx); });
   if (!activos.length) h = '<p style="color:#888;">No hay pedidos activos.</p>';
   document.getElementById('lista').innerHTML = h;
   document.getElementById('num-completados').innerText = archivados.length;
   document.getElementById('txt-carpeta').innerText = carpetaAbierta ? '▼ Cerrar' : '▶ Toca para ver - Toca un nombre para ver ticket';
-
   let ha = '';
   archivados.forEach(function(o) {
     ha += '<div class="completado-item" onclick="verTicket(' + o.idx + ')"><div><b>' + o.p.c + '</b><br><span class="small">' + o.p.depto + ' • Toca para ver ticket</span></div><div style="text-align:right;"><span style="font-size:12px;color:#888;">' + (o.p.fecha || '') + '</span><br><span style="font-size:14px;">🧾 Ver ticket ▶</span></div></div>';
@@ -652,7 +638,6 @@ function mostrar() {
   if (!archivados.length) ha = '<p style="color:#888;">Aún no hay completados.</p>';
   document.getElementById('lista-archivados').innerHTML = ha;
   document.getElementById('lista-archivados').style.display = carpetaAbierta ? 'block' : 'none';
-
   let hr = '';
   let puedeRep = pr();
   pedidos.forEach(function(x, i) {
@@ -660,7 +645,6 @@ function mostrar() {
   });
   if (!pedidos.length) hr = '<p style="color:#888;">Aún no hay clientes.</p>';
   document.getElementById('lista-reporte').innerHTML = hr;
-
   let lt = '';
   let ord = pedidos.map(function(p, idx) { return { p: p, idx: idx }; }).sort(function(a, b) { return (b.p.fechaNum || 0) - (a.p.fechaNum || 0); });
   ord.forEach(function(o) {
@@ -669,7 +653,6 @@ function mostrar() {
   if (!pedidos.length) lt = '<p style="color:#888;">No hay pedidos.</p>';
   document.getElementById('lista-total').innerHTML = lt;
   document.getElementById('total-total').innerText = 'Total general: $' + totG;
-
   let deudores = pedidos.map(function(p, idx) { return { p: p, idx: idx }; }).filter(function(o) { return o.p.resta > 0; }).sort(function(a, b) { return (a.p.fechaNum || 0) - (b.p.fechaNum || 0); });
   let lf = '';
   deudores.forEach(function(o) {
@@ -678,16 +661,12 @@ function mostrar() {
   if (!deudores.length) lf = '<p style="color:#0a6b0a;">✅ Nadie debe. Todo pagado.</p>';
   document.getElementById('lista-falta').innerHTML = lf;
   document.getElementById('total-falta').innerText = 'Falta cobrar total: $' + faltaTotal;
-
   document.getElementById('r-total').innerText = pedidos.length;
   document.getElementById('r-total-dinero').innerText = '$' + totG;
   document.getElementById('r-resta').innerText = '$' + faltaTotal;
   document.getElementById('r-pagado').innerText = pedidos.filter(function(x) { return x.pagado; }).length;
   document.getElementById('r-listo').innerText = pedidos.filter(function(x) { return x.listo; }).length;
 }
-
-document.getElementById('btn-compartir-ticket').addEventListener('click', function() { descargarImagen(ticketIdx); });
-
 window.ir = ir;
 window.agregar = agregar;
 window.eliminar = eliminar;
@@ -697,10 +676,10 @@ window.toggleDetalle = toggleDetalle;
 window.toggleCarpeta = toggleCarpeta;
 window.verTicket = verTicket;
 window.cerrarTicket = cerrarTicket;
+window.compartirTicketImagen = compartirTicketImagen;
 window.pasarACopiar = pasarACopiar;
 window.cerrarModal = cerrarModal;
 window.confirmarCopiar = confirmarCopiar;
-window.descargarImagen = descargarImagen;
 window.mostrar = mostrar;
 window.mostrarApp = mostrarApp;
 window.toggleGrabacion = toggleGrabacion;
